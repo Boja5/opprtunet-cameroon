@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company Dashboard — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .dash-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 28px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Sidebar */
+    .dash-sidebar {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+    }
+    .dash-company-card {
+      background: var(--dark-800);
+      padding: 24px;
+      text-align: center;
+    }
+    .dash-company-avatar {
+      width: 64px; height: 64px;
+      border-radius: var(--radius-md);
+      background: var(--green-700);
+      display: flex; align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 24px;
+      color: var(--white);
+      margin: 0 auto 12px;
+    }
+    .dash-company-name {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700;
+      color: var(--white); margin-bottom: 4px;
+    }
+    .dash-company-type {
+      font-size: 12px; color: var(--green-400);
+    }
+    .dash-nav {
+      padding: 12px 8px;
+    }
+    .dash-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: var(--radius-md);
+      font-size: 13px; color: #666;
+      cursor: pointer; transition: var(--transition);
+      margin-bottom: 2px;
+    }
+    .dash-nav-item:hover { background: var(--gray-100); color: var(--dark-900); }
+    .dash-nav-item.active { background: var(--green-50); color: var(--green-700); font-weight: 500; }
+    .dash-nav-icon { font-size: 16px; }
+
+    /* Main area */
+    .dash-main {}
+
+    /* Stats row */
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-bottom: 24px;
+    }
+    .dash-stat-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .dash-stat-num {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 700;
+      color: var(--dark-900); margin-bottom: 4px;
+    }
+    .dash-stat-label { font-size: 13px; color: #888; }
+
+    /* Section header */
+    .dash-section-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 16px;
+    }
+    .dash-section-title {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700; color: var(--dark-900);
+    }
+    .btn-new-listing {
+      background: var(--green-700); color: var(--white);
+      border: none; padding: 9px 20px;
+      border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-new-listing:hover { background: var(--green-600); }
+
+    /* Panels */
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
+
+    /* Listing cards */
+    .listing-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px; align-items: center;
+    }
+    .listing-card-title {
+      font-family: var(--font-display);
+      font-size: 15px; font-weight: 600;
+      color: var(--dark-900); margin-bottom: 4px;
+    }
+    .listing-card-meta {
+      font-size: 12px; color: #888;
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .listing-card-actions {
+      display: flex; gap: 8px;
+    }
+    .btn-view {
+      font-size: 12px; padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-200);
+      background: var(--white); color: #666;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .btn-view:hover { border-color: var(--green-400); color: var(--green-700); }
+    .btn-delete {
+      font-size: 12px; padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #fcc; background: #fff5f5;
+      color: #c53030; cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .btn-delete:hover { background: #fed7d7; }
+
+    /* Post listing form */
+    .post-form-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .post-form-header {
+      background: var(--dark-800);
+      padding: 20px 28px;
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 600; color: var(--white);
+    }
+    .post-form-body { padding: 28px; }
+
+    .pf-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 18px;
+    }
+    .pf-row.single { grid-template-columns: 1fr; }
+    .pf-group { display: flex; flex-direction: column; gap: 6px; }
+    .pf-label {
+      font-size: 13px; font-weight: 500; color: var(--dark-900);
+    }
+    .pf-label span { color: var(--green-600); }
+    .pf-input, .pf-select, .pf-textarea {
+      padding: 10px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 14px; font-family: var(--font-body);
+      color: var(--dark-900); background: var(--white);
+      transition: var(--transition);
+    }
+    .pf-input:focus, .pf-select:focus, .pf-textarea:focus {
+      outline: none; border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.08);
+    }
+    .pf-input.error, .pf-select.error { border-color: #e53e3e; }
+    .pf-textarea { resize: vertical; min-height: 110px; }
+    .pf-error { font-size: 11px; color: #e53e3e; display: none; }
+    .pf-error.visible { display: block; }
+
+    /* Type selector in form */
+    .pf-type-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 8px; margin-bottom: 18px;
+    }
+    .pf-type-opt {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 10px 6px; text-align: center;
+      cursor: pointer; transition: var(--transition);
+      font-size: 12px; color: #666;
+    }
+    .pf-type-opt:hover { border-color: var(--green-400); }
+    .pf-type-opt.selected {
+      border-color: var(--green-700);
+      background: var(--green-50); color: var(--green-800);
+      font-weight: 500;
+    }
+    .pf-type-opt-icon { font-size: 20px; margin-bottom: 4px; }
+
+    /* Requirements */
+    .req-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+    .req-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 12px; background: var(--gray-100);
+      border-radius: var(--radius-md); font-size: 13px;
+    }
+    .req-dot { width:6px; height:6px; border-radius:50%; background:var(--green-600); flex-shrink:0; }
+    .req-text { flex: 1; }
+    .req-rm { background:none; border:none; color:#bbb; cursor:pointer; font-size:16px; padding:0; transition:var(--transition); }
+    .req-rm:hover { color:#e53e3e; }
+    .req-add-row { display:flex; gap:8px; }
+    .req-add-input {
+      flex:1; padding:8px 12px;
+      border:1px solid var(--gray-200); border-radius:var(--radius-md);
+      font-size:13px; font-family:var(--font-body);
+    }
+    .req-add-input:focus { outline:none; border-color:var(--green-400); }
+    .req-add-btn {
+      background:var(--green-700); color:var(--white);
+      border:none; padding:8px 16px; border-radius:var(--radius-md);
+      font-size:13px; font-weight:500; cursor:pointer; transition:var(--transition);
+    }
+    .req-add-btn:hover { background:var(--green-600); }
+
+    .post-submit {
+      background: var(--green-700); color: var(--white);
+      border: none; padding: 12px 32px;
+      border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .post-submit:hover { background: var(--green-600); }
+
+    .post-alert {
+      padding: 12px 16px; border-radius: var(--radius-md);
+      font-size: 13px; margin-bottom: 20px; display: none;
+    }
+    .post-alert.success {
+      background: var(--green-50); color: var(--green-800);
+      border: 1px solid var(--green-200); display: block;
+    }
+    .post-alert.error {
+      background: #FEF0F0; color: #8a1a1a;
+      border: 1px solid #f5c6c6; display: block;
+    }
+
+    /* Company profile panel */
+    .profile-form { max-width: 600px; }
+    .profile-avatar-row {
+      display: flex; align-items: center;
+      gap: 20px; margin-bottom: 28px;
+    }
+    .profile-avatar-big {
+      width: 80px; height: 80px;
+      border-radius: var(--radius-md);
+      background: var(--green-700);
+      display: flex; align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 30px; font-weight: 700;
+      color: var(--white); flex-shrink: 0;
+    }
+
+    .empty-listings {
+      text-align: center; padding: 60px 20px;
+      color: #aaa;
+    }
+    .empty-listings-icon { font-size: 48px; margin-bottom: 14px; }
+    .empty-listings h3 {
+      font-family: var(--font-display);
+      font-size: 18px; color: var(--dark-900); margin-bottom: 8px;
+    }
+    .empty-listings p { font-size: 14px; }
+
+    @media (max-width: 768px) {
+      .dash-layout { grid-template-columns: 1fr; }
+      .dash-sidebar { position: static; }
+      .dash-stats   { grid-template-columns: 1fr 1fr; }
+      .pf-row       { grid-template-columns: 1fr; }
+      .pf-type-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">OpportuNet</span>
+        <span class="logo-country">Cameroon</span>
+      </div>
+    </a>
+    <div class="navbar-links">
+      <a href="index.html"         class="nav-link">Home</a>
+      <a href="opportunities.html" class="nav-link">Opportunities</a>
+      <a href="map.html"           class="nav-link">Map</a>
+      <a href="about.html"         class="nav-link">About</a>
+    </div>
+    <div class="navbar-actions" id="navbar-actions"></div>
+  </nav>
+
+  <!-- ═══ DASHBOARD LAYOUT ═════════════════ -->
+  <div class="dash-layout">
+
+    <!-- Sidebar -->
+    <aside class="dash-sidebar">
+      <div class="dash-company-card">
+        <div class="dash-company-avatar" id="company-avatar">C</div>
+        <div class="dash-company-name"   id="company-name">Company</div>
+        <div class="dash-company-type"   id="company-type">Organization</div>
+      </div>
+      <nav class="dash-nav">
+        <div class="dash-nav-item active" onclick="showPanel('overview')">
+          <span class="dash-nav-icon">📊</span> Overview
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('listings')">
+          <span class="dash-nav-icon">📋</span> My Listings
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('post')">
+          <span class="dash-nav-icon">➕</span> Post New
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('company-profile')">
+          <span class="dash-nav-icon">🏢</span> Company Profile
+        </div>
+        <div class="dash-nav-item" style="margin-top:8px;border-top:1px solid var(--gray-200);padding-top:10px;"
+             onclick="Auth.logout()">
+          <span class="dash-nav-icon">🚪</span> Logout
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="dash-main">
+
+      <!-- Overview panel -->
+      <div class="dash-panel active" id="panel-overview">
+        <div class="dash-section-header">
+          <div class="dash-section-title" id="welcome-title">Dashboard</div>
+          <button class="btn-new-listing" onclick="showPanel('post')">
+            + Post New Listing
+          </button>
+        </div>
+
+        <div class="dash-stats">
+          <div class="dash-stat-card">
+            <div class="dash-stat-num" id="stat-listings">0</div>
+            <div class="dash-stat-label">Active Listings</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-num" id="stat-views">—</div>
+            <div class="dash-stat-label">Profile Views</div>
+          </div>
+          <div class="dash-stat-card">
+            <div class="dash-stat-num" id="stat-region">—</div>
+            <div class="dash-stat-label">Your Region</div>
+          </div>
+        </div>
+
+        <!-- Recent listings preview -->
+        <div style="background:var(--white);border:1px solid var(--gray-200);
+                    border-radius:var(--radius-lg);padding:24px;">
+          <div style="font-family:var(--font-display);font-size:15px;
+                      font-weight:600;color:var(--dark-900);margin-bottom:16px;">
+            Recent Listings
+          </div>
+          <div id="overview-listings"></div>
+        </div>
+      </div>
+
+      <!-- My listings panel -->
+      <div class="dash-panel" id="panel-listings">
+        <div class="dash-section-header">
+          <div class="dash-section-title">My Listings</div>
+          <button class="btn-new-listing" onclick="showPanel('post')">
+            + Post New
+          </button>
+        </div>
+        <div id="all-listings"></div>
+      </div>
+
+      <!-- Post new listing panel -->
+      <div class="dash-panel" id="panel-post">
+        <div class="dash-section-header">
+          <div class="dash-section-title">Post a New Listing</div>
+        </div>
+
+        <div class="post-form-card">
+          <div class="post-form-header">📋 New Opportunity Details</div>
+          <div class="post-form-body">
+
+            <div class="post-alert" id="post-alert"></div>
+
+            <!-- Type -->
+            <div style="margin-bottom:18px;">
+              <div class="pf-label" style="margin-bottom:8px;">
+                Type <span>*</span>
+              </div>
+              <div class="pf-type-grid">
+                <div class="pf-type-opt" onclick="selectPFType('job',this)">
+                  <div class="pf-type-opt-icon">💼</div>Job
+                </div>
+                <div class="pf-type-opt" onclick="selectPFType('internship',this)">
+                  <div class="pf-type-opt-icon">🎓</div>Internship
+                </div>
+                <div class="pf-type-opt" onclick="selectPFType('training',this)">
+                  <div class="pf-type-opt-icon">📚</div>Training
+                </div>
+                <div class="pf-type-opt" onclick="selectPFType('grant',this)">
+                  <div class="pf-type-opt-icon">💰</div>Grant
+                </div>
+              </div>
+              <div class="pf-error" id="pf-err-type">Please select a type</div>
+            </div>
+
+            <div class="pf-row single">
+              <div class="pf-group">
+                <label class="pf-label">Title <span>*</span></label>
+                <input type="text" class="pf-input" id="pf-title"
+                  placeholder="e.g. Junior Web Developer" />
+                <div class="pf-error" id="pf-err-title">Please enter a title</div>
+              </div>
+            </div>
+
+            <div class="pf-row">
+              <div class="pf-group">
+                <label class="pf-label">Sector <span>*</span></label>
+                <select class="pf-select" id="pf-sector">
+                  <option value="">Select...</option>
+                  <option value="technology">Technology</option>
+                  <option value="business">Business</option>
+                  <option value="health">Health</option>
+                  <option value="agriculture">Agriculture</option>
+                  <option value="education">Education</option>
+                  <option value="finance">Finance</option>
+                  <option value="engineering">Engineering</option>
+                  <option value="other">Other</option>
+                </select>
+                <div class="pf-error" id="pf-err-sector">Please select sector</div>
+              </div>
+              <div class="pf-group">
+                <label class="pf-label">Duration <span>*</span></label>
+                <input type="text" class="pf-input" id="pf-duration"
+                  placeholder="e.g. Full-time, 3 months" />
+                <div class="pf-error" id="pf-err-duration">Please enter duration</div>
+              </div>
+            </div>
+
+            <div class="pf-row single">
+              <div class="pf-group">
+                <label class="pf-label">Description <span>*</span></label>
+                <textarea class="pf-textarea" id="pf-description"
+                  placeholder="Describe the opportunity in detail..."></textarea>
+                <div class="pf-error" id="pf-err-description">
+                  Please add a description
+                </div>
+              </div>
+            </div>
+
+            <div class="pf-row">
+              <div class="pf-group">
+                <label class="pf-label">Region <span>*</span></label>
+                <select class="pf-select" id="pf-region">
+                  <option value="">Select...</option>
+                  <option>Centre</option>
+                  <option>Littoral</option>
+                  <option>West</option>
+                  <option>North West</option>
+                  <option>South West</option>
+                  <option>Adamaoua</option>
+                  <option>North</option>
+                  <option>Far North</option>
+                  <option>South</option>
+                  <option>East</option>
+                  <option>National</option>
+                </select>
+                <div class="pf-error" id="pf-err-region">Please select region</div>
+              </div>
+              <div class="pf-group">
+                <label class="pf-label">City <span>*</span></label>
+                <input type="text" class="pf-input" id="pf-city"
+                  placeholder="e.g. Yaoundé" />
+                <div class="pf-error" id="pf-err-city">Please enter city</div>
+              </div>
+            </div>
+
+            <div class="pf-row">
+              <div class="pf-group">
+                <label class="pf-label">Salary / Compensation</label>
+                <input type="text" class="pf-input" id="pf-salary"
+                  placeholder="e.g. 150,000 XAF/mo or Free" />
+              </div>
+              <div class="pf-group">
+                <label class="pf-label">Deadline <span>*</span></label>
+                <input type="date" class="pf-input" id="pf-deadline" />
+                <div class="pf-error" id="pf-err-deadline">
+                  Please set a deadline
+                </div>
+              </div>
+            </div>
+
+            <!-- Requirements -->
+            <div style="margin-bottom:20px;">
+              <div class="pf-label" style="margin-bottom:8px;">Requirements</div>
+              <div class="req-list" id="pf-req-list"></div>
+              <div class="req-add-row">
+                <input type="text" class="req-add-input" id="pf-req-input"
+                  placeholder="Add a requirement..." />
+                <button class="req-add-btn" onclick="addPFReq()">+ Add</button>
+              </div>
+            </div>
+
+            <button class="post-submit" onclick="submitListing()">
+              🚀 Publish Listing
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Company profile panel -->
+      <div class="dash-panel" id="panel-company-profile">
+        <div class="dash-section-header">
+          <div class="dash-section-title">Company Profile</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--gray-200);
+                    border-radius:var(--radius-xl);padding:32px;">
+          <div class="profile-avatar-row">
+            <div class="profile-avatar-big" id="profile-avatar-big">C</div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:20px;
+                          font-weight:700;color:var(--dark-900);" id="profile-name-big">
+              </div>
+              <div style="font-size:13px;color:#888;" id="profile-type-big"></div>
+            </div>
+          </div>
+
+          <div class="pf-row single" style="margin-bottom:16px;">
+            <div class="pf-group">
+              <label class="pf-label">Company Name</label>
+              <input type="text" class="pf-input" id="cp-name" />
+            </div>
+          </div>
+          <div class="pf-row single" style="margin-bottom:16px;">
+            <div class="pf-group">
+              <label class="pf-label">Description</label>
+              <textarea class="pf-textarea" id="cp-desc"></textarea>
+            </div>
+          </div>
+          <div class="pf-row" style="margin-bottom:16px;">
+            <div class="pf-group">
+              <label class="pf-label">Website</label>
+              <input type="text" class="pf-input" id="cp-website" />
+            </div>
+            <div class="pf-group">
+              <label class="pf-label">Region</label>
+              <input type="text" class="pf-input" id="cp-region" readonly />
+            </div>
+          </div>
+
+          <div id="cp-alert" style="display:none;padding:10px 14px;
+               border-radius:8px;font-size:13px;margin-bottom:14px;
+               background:var(--green-50);color:var(--green-800);
+               border:1px solid var(--green-200);">
+            Profile updated successfully!
+          </div>
+
+          <button class="post-submit" onclick="saveCompanyProfile()">
+            Save Changes
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+
+</body>
+</html>

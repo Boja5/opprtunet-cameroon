@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: var(--dark-900); min-height: 100vh; }
+
+    .auth-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left panel */
+    .auth-left {
+      background: var(--dark-800);
+      padding: 60px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(29,158,117,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 56px;
+      text-decoration: none;
+    }
+    .auth-logo-icon {
+      width: 40px; height: 40px;
+      background: var(--green-700);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center;
+      justify-content: center; font-size: 20px;
+    }
+    .auth-logo-name {
+      font-family: var(--font-display);
+      font-size: 17px; font-weight: 700;
+      color: var(--white);
+    }
+    .auth-logo-country {
+      font-size: 11px; color: var(--green-400);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .auth-left h1 {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 700;
+      color: var(--white); letter-spacing: -0.5px;
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .auth-left h1 span { color: var(--green-400); }
+    .auth-left p {
+      font-size: 15px; color: rgba(255,255,255,0.5);
+      line-height: 1.75; font-weight: 300; margin-bottom: 48px;
+    }
+    .auth-benefits {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .auth-benefit {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .auth-benefit-icon {
+      width: 36px; height: 36px;
+      background: rgba(29,158,117,0.15);
+      border-radius: 8px;
+      display: flex; align-items: center;
+      justify-content: center; font-size: 16px;
+      flex-shrink: 0;
+    }
+    .auth-benefit-text {
+      font-size: 13px; color: rgba(255,255,255,0.65);
+    }
+
+    /* Right panel */
+    .auth-right {
+      background: var(--white);
+      padding: 60px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-form-title {
+      font-family: var(--font-display);
+      font-size: 26px; font-weight: 700;
+      color: var(--dark-900); letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .auth-form-sub {
+      font-size: 14px; color: #888;
+      margin-bottom: 36px; font-weight: 300;
+    }
+    .auth-form-sub a {
+      color: var(--green-700); font-weight: 500;
+      text-decoration: none;
+    }
+
+    .auth-field { margin-bottom: 18px; }
+    .auth-label {
+      display: block; font-size: 13px;
+      font-weight: 500; color: var(--dark-900);
+      margin-bottom: 6px;
+    }
+    .auth-input {
+      width: 100%; padding: 11px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 14px; font-family: var(--font-body);
+      color: var(--dark-900); background: var(--white);
+      transition: var(--transition);
+    }
+    .auth-input:focus {
+      outline: none; border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.08);
+    }
+    .auth-input.error { border-color: #e53e3e; }
+
+    .auth-error-msg {
+      font-size: 12px; color: #e53e3e;
+      margin-top: 4px; display: none;
+    }
+    .auth-error-msg.visible { display: block; }
+
+    .auth-forgot {
+      display: block; text-align: right;
+      font-size: 12px; color: var(--green-700);
+      margin-top: -10px; margin-bottom: 24px;
+      text-decoration: none;
+    }
+
+    .auth-submit {
+      width: 100%; background: var(--green-700);
+      color: var(--white); border: none;
+      padding: 13px; border-radius: var(--radius-md);
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+      display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+    }
+    .auth-submit:hover { background: var(--green-600); transform: translateY(-1px); }
+    .auth-submit:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+
+    .auth-alert {
+      padding: 12px 16px; border-radius: var(--radius-md);
+      font-size: 13px; margin-bottom: 20px; display: none;
+    }
+    .auth-alert.error   { background: #FEF0F0; color: #8a1a1a; border: 1px solid #f5c6c6; display: block; }
+    .auth-alert.success { background: var(--green-50); color: var(--green-800); border: 1px solid var(--green-200); display: block; }
+
+    .auth-divider {
+      display: flex; align-items: center;
+      gap: 12px; margin: 24px 0;
+    }
+    .auth-divider-line { flex: 1; height: 1px; background: var(--gray-200); }
+    .auth-divider-text { font-size: 12px; color: #bbb; }
+
+    .auth-signup-btn {
+      width: 100%; background: transparent;
+      color: var(--green-700); border: 1.5px solid var(--green-200);
+      padding: 12px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .auth-signup-btn:hover { background: var(--green-50); }
+
+    @media (max-width: 768px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .auth-left   { display: none; }
+      .auth-right  { padding: 40px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-layout">
+
+    <!-- Left panel -->
+    <div class="auth-left">
+      <a href="index.html" class="auth-logo">
+        <div class="auth-logo-icon">🌿</div>
+        <div>
+          <div class="auth-logo-name">OpportuNet</div>
+          <div class="auth-logo-country">Cameroon</div>
+        </div>
+      </a>
+
+      <h1>Welcome<br>back to<br><span>OpportuNet</span></h1>
+      <p>
+        Sign in to access your account, manage your
+        listings or update your professional profile.
+      </p>
+
+      <div class="auth-benefits">
+        <div class="auth-benefit">
+          <div class="auth-benefit-icon">🏢</div>
+          <div class="auth-benefit-text">
+            Companies — post and manage job listings
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <div class="auth-benefit-icon">👤</div>
+          <div class="auth-benefit-text">
+            Youth — build your professional profile
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <div class="auth-benefit-icon">🔖</div>
+          <div class="auth-benefit-text">
+            Save and track opportunities you're interested in
+          </div>
+        </div>
+        <div class="auth-benefit">
+          <div class="auth-benefit-icon">🗺</div>
+          <div class="auth-benefit-text">
+            Find opportunities in your region on the map
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="auth-right">
+      <div class="auth-form-title">Sign in</div>
+      <div class="auth-form-sub">
+        Don't have an account?
+        <a href="signup.html">Create one free →</a>
+      </div>
+
+      <!-- Alert -->
+      <div class="auth-alert" id="auth-alert"></div>
+
+      <!-- Email -->
+      <div class="auth-field">
+        <label class="auth-label">Email address</label>
+        <input type="email" class="auth-input" id="login-email"
+          placeholder="your@email.com" />
+        <div class="auth-error-msg" id="err-email">
+          Please enter a valid email
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input type="password" class="auth-input" id="login-password"
+          placeholder="Your password" />
+        <div class="auth-error-msg" id="err-password">
+          Please enter your password
+        </div>
+      </div>
+
+      <a href="#" class="auth-forgot">Forgot password?</a>
+
+      <!-- Submit -->
+      <button class="auth-submit" id="login-btn" onclick="handleLogin()">
+        Sign In →
+      </button>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <div class="auth-divider-text">or</div>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <button class="auth-signup-btn" onclick="window.location.href='signup.html'">
+        Create a new account
+      </button>
+
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (Auth.getCurrentUser()) {
+      var u = Auth.getCurrentUser();
+      window.location.href = u.type === 'company' ? 'dashboard.html' : 'profile.html';
+    }
+
+    function handleLogin() {
+      var email    = document.getElementById('login-email').value.trim();
+      var password = document.getElementById('login-password').value;
+      var alert    = document.getElementById('auth-alert');
+      var btn      = document.getElementById('login-btn');
+      var valid    = true;
+
+      // Clear previous errors
+      alert.className = 'auth-alert';
+      document.getElementById('login-email').classList.remove('error');
+      document.getElementById('login-password').classList.remove('error');
+      document.getElementById('err-email').classList.remove('visible');
+      document.getElementById('err-password').classList.remove('visible');
+
+      // Validate
+      if (!email || !email.includes('@')) {
+        document.getElementById('login-email').classList.add('error');
+        document.getElementById('err-email').classList.add('visible');
+        valid = false;
+      }
+      if (!password) {
+        document.getElementById('login-password').classList.add('error');
+        document.getElementById('err-password').classList.add('visible');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Loading state
+      btn.textContent = 'Signing in...';
+      btn.disabled    = true;
+
+      // Simulate small delay for realism
+      setTimeout(function() {
+        var result = Auth.login(email, password);
+
+        if (!result.success) {
+          alert.textContent = result.message;
+          alert.className   = 'auth-alert error';
+          btn.textContent   = 'Sign In →';
+          btn.disabled      = false;
+          return;
+        }
+
+        // Success — redirect based on account type
+        alert.textContent = 'Welcome back, ' + result.user.name + '! Redirecting...';
+        alert.className   = 'auth-alert success';
+
+        setTimeout(function() {
+          var params  = new URLSearchParams(window.location.search);
+          var redirect = params.get('redirect');
+          if (redirect) {
+            window.location.href = redirect;
+          } else {
+            window.location.href = result.user.type === 'company'
+              ? 'dashboard.html'
+              : 'profile.html';
+          }
+        }, 800);
+      }, 600);
+    }
+
+    // Enter key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opportunity Detail — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .detail-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 28px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      align-items: start;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 24px;
+      cursor: pointer;
+      transition: var(--transition);
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .back-btn:hover { color: var(--green-700); }
+    .detail-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .detail-card-header {
+      background: var(--dark-800);
+      padding: 32px;
+      position: relative;
+    }
+    .detail-card-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(29,158,117,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .detail-org-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .detail-org-logo {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--green-800);
+      display: flex; align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 18px;
+      color: var(--green-200); flex-shrink: 0;
+    }
+    .detail-org-name {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 2px;
+    }
+    .detail-org-location {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+    }
+    .detail-title {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 700;
+      color: var(--white); letter-spacing: -0.5px;
+      margin-bottom: 16px; line-height: 1.2;
+    }
+    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .detail-tag {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .detail-card-body { padding: 32px; }
+    .detail-section { margin-bottom: 32px; }
+    .detail-section-title {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+      color: var(--dark-900);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .detail-section-text {
+      font-size: 15px; color: #444;
+      line-height: 1.8; font-weight: 300;
+    }
+    .detail-requirements {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .detail-req-item {
+      display: flex; align-items: flex-start;
+      gap: 10px; font-size: 14px; color: #444;
+    }
+    .detail-req-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green-600);
+      margin-top: 7px; flex-shrink: 0;
+    }
+    .detail-sidebar {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .sidebar-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .sidebar-card-title {
+      font-family: var(--font-display);
+      font-size: 13px; font-weight: 600;
+      color: var(--dark-900);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .detail-meta-list {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .detail-meta-item {
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 12px;
+    }
+    .detail-meta-label { font-size: 12px; color: #888; }
+    .detail-meta-value {
+      font-size: 13px; font-weight: 500;
+      color: var(--dark-900); text-align: right;
+    }
+    .btn-apply-full {
+      display: block; width: 100%;
+      text-align: center;
+      background: var(--green-700); color: var(--white);
+      font-size: 15px; font-weight: 500;
+      padding: 14px; border-radius: var(--radius-md);
+      border: none; cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .btn-apply-full:hover {
+      background: var(--green-600);
+      transform: translateY(-1px);
+    }
+    .btn-bookmark-full {
+      display: block; width: 100%;
+      text-align: center;
+      background: transparent; color: var(--green-700);
+      font-size: 14px; font-weight: 500;
+      padding: 11px; border-radius: var(--radius-md);
+      border: 1px solid var(--green-200);
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+      margin-top: 10px;
+    }
+    .btn-bookmark-full:hover { background: var(--green-50); }
+    .salary-display { text-align: center; padding: 16px 0; }
+    .salary-amount {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 700;
+      color: var(--green-700);
+    }
+    .salary-period {
+      font-size: 13px; color: #888; margin-top: 2px;
+    }
+    .deadline-display {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px; background: var(--gold-100);
+      border-radius: var(--radius-md); margin-top: 12px;
+    }
+    .deadline-icon { font-size: 20px; }
+    .deadline-label { font-size: 11px; color: #888; }
+    .deadline-value {
+      font-size: 13px; font-weight: 600;
+      color: var(--gold-600);
+    }
+    .related-card {
+      display: flex; gap: 12px; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-200);
+      cursor: pointer; transition: var(--transition);
+    }
+    .related-card:last-child { border-bottom: none; }
+    .related-card:hover .related-title { color: var(--green-700); }
+    .related-logo {
+      width: 36px; height: 36px;
+      border-radius: 8px; background: var(--green-50);
+      display: flex; align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 12px;
+      color: var(--green-800); flex-shrink: 0;
+    }
+    .related-title {
+      font-size: 13px; font-weight: 500;
+      color: var(--dark-900); transition: var(--transition);
+    }
+    .related-org { font-size: 11px; color: #888; margin-top: 1px; }
+    .not-found { text-align: center; padding: 80px 28px; }
+    .not-found-icon { font-size: 56px; margin-bottom: 16px; }
+    .not-found h2 {
+      font-family: var(--font-display);
+      font-size: 24px; color: var(--dark-900); margin-bottom: 8px;
+    }
+    .not-found p { font-size: 15px; color: #888; margin-bottom: 24px; }
+    @media (max-width: 768px) {
+      .detail-layout { grid-template-columns: 1fr; }
+      .detail-title  { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">OpportuNet</span>
+        <span class="logo-country">Cameroon</span>
+      </div>
+    </a>
+    <div class="navbar-links">
+      <a href="index.html"         class="nav-link">Home</a>
+      <a href="opportunities.html" class="nav-link active">Opportunities</a>
+      <a href="map.html"           class="nav-link">Map</a>
+      <a href="about.html"         class="nav-link">About</a>
+    </div>
+    <div class="navbar-actions" id="navbar-actions"></div>
+  </nav>
+
+  <!-- ═══ DETAIL CONTENT ═══════════════════ -->
+  <div id="detail-content"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/detail.js"></script>
+  <script>updateNavbar();</script>
+
+</body>
+</html>

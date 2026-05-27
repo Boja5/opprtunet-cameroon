@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .profile-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 28px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Left sidebar */
+    .profile-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 88px;
+    }
+
+    .profile-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .profile-card-top {
+      background: var(--dark-800);
+      padding: 28px;
+      text-align: center;
+      position: relative;
+    }
+    .profile-card-top::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(29,158,117,0.15) 0%, transparent 70%);
+    }
+    .profile-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--green-700);
+      display: flex; align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 26px;
+      color: var(--white);
+      margin: 0 auto 12px;
+      border: 3px solid rgba(255,255,255,0.15);
+    }
+    .profile-name {
+      font-family: var(--font-display);
+      font-size: 17px; font-weight: 700;
+      color: var(--white); margin-bottom: 4px;
+    }
+    .profile-region {
+      font-size: 12px; color: var(--green-400);
+    }
+
+    .profile-card-body { padding: 16px; }
+    .profile-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--radius-md);
+      font-size: 13px; color: #666;
+      cursor: pointer; transition: var(--transition);
+      margin-bottom: 2px;
+    }
+    .profile-nav-item:hover { background: var(--gray-100); color: var(--dark-900); }
+    .profile-nav-item.active { background: var(--green-50); color: var(--green-700); font-weight: 500; }
+
+    .profile-completion {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .completion-title {
+      font-size: 12px; font-weight: 600;
+      color: var(--dark-900); margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .completion-bar {
+      height: 6px; background: var(--gray-200);
+      border-radius: 3px; overflow: hidden; margin-bottom: 6px;
+    }
+    .completion-fill {
+      height: 100%; background: var(--green-600);
+      border-radius: 3px; transition: width 0.5s ease;
+    }
+    .completion-label {
+      font-size: 12px; color: #888;
+    }
+
+    /* Main content */
+    .profile-main {}
+    .profile-panel { display: none; }
+    .profile-panel.active { display: block; }
+
+    /* Section cards */
+    .p-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .p-card-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 20px;
+    }
+    .p-card-title {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700; color: var(--dark-900);
+    }
+    .p-card-edit {
+      font-size: 12px; color: var(--green-700);
+      cursor: pointer; font-weight: 500;
+      background: none; border: none;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .p-card-edit:hover { background: var(--green-50); }
+
+    /* Form fields */
+    .p-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 16px;
+    }
+    .p-row.single { grid-template-columns: 1fr; }
+    .p-group { display: flex; flex-direction: column; gap: 6px; }
+    .p-label { font-size: 13px; font-weight: 500; color: var(--dark-900); }
+    .p-input, .p-select, .p-textarea {
+      padding: 10px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 14px; font-family: var(--font-body);
+      color: var(--dark-900); background: var(--white);
+      transition: var(--transition);
+    }
+    .p-input:focus, .p-select:focus, .p-textarea:focus {
+      outline: none; border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.08);
+    }
+    .p-textarea { resize: vertical; min-height: 90px; }
+    .p-save-btn {
+      background: var(--green-700); color: var(--white);
+      border: none; padding: 10px 24px;
+      border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .p-save-btn:hover { background: var(--green-600); }
+
+    /* Skills */
+    .skills-wrap {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .skill-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500;
+      background: var(--green-50); color: var(--green-800);
+      border: 1px solid var(--green-200);
+      padding: 5px 12px; border-radius: 20px;
+    }
+    .skill-remove {
+      background: none; border: none;
+      color: var(--green-700); cursor: pointer;
+      font-size: 14px; padding: 0; line-height: 1;
+    }
+    .skill-remove:hover { color: #e53e3e; }
+    .skill-add-row { display: flex; gap: 8px; }
+    .skill-input {
+      flex: 1; padding: 9px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 13px; font-family: var(--font-body);
+    }
+    .skill-input:focus { outline: none; border-color: var(--green-400); }
+    .skill-add-btn {
+      background: var(--green-700); color: var(--white);
+      border: none; padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+    }
+    .skill-add-btn:hover { background: var(--green-600); }
+
+    /* Education / Experience items */
+    .edu-item, .exp-item {
+      display: flex; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .edu-item:last-child, .exp-item:last-child { border-bottom: none; }
+    .edu-icon, .exp-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--green-50);
+      display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+      flex-shrink: 0;
+    }
+    .edu-title, .exp-title {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600; color: var(--dark-900);
+    }
+    .edu-sub, .exp-sub { font-size: 12px; color: #888; margin-top: 2px; }
+    .edu-delete, .exp-delete {
+      background: none; border: none;
+      color: #ccc; cursor: pointer; font-size: 16px;
+      margin-left: auto; transition: var(--transition);
+    }
+    .edu-delete:hover, .exp-delete:hover { color: #e53e3e; }
+
+    /* Add education/experience form */
+    .add-item-form {
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      padding: 16px; margin-top: 14px;
+      display: none;
+    }
+    .add-item-form.visible { display: block; }
+    .add-item-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--green-700);
+      background: none; border: 1px dashed var(--green-300);
+      padding: 8px 16px; border-radius: var(--radius-md);
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .add-item-btn:hover { background: var(--green-50); }
+
+    /* CV panel */
+    .cv-preview {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+    }
+    .cv-header {
+      display: flex; gap: 20px;
+      align-items: center; margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--dark-900);
+    }
+    .cv-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--green-700);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 26px; color: var(--white);
+      flex-shrink: 0;
+    }
+    .cv-name {
+      font-family: var(--font-display);
+      font-size: 26px; font-weight: 700;
+      color: var(--dark-900); letter-spacing: -0.5px;
+    }
+    .cv-contact {
+      font-size: 13px; color: #666; margin-top: 4px;
+    }
+    .cv-section { margin-bottom: 24px; }
+    .cv-section-title {
+      font-family: var(--font-display);
+      font-size: 13px; font-weight: 700;
+      color: var(--dark-900); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .cv-bio { font-size: 14px; color: #444; line-height: 1.75; }
+    .cv-skills-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+    .cv-skill {
+      font-size: 12px; padding: 3px 12px;
+      border-radius: 20px; background: var(--green-50);
+      color: var(--green-800); border: 1px solid var(--green-200);
+    }
+    .cv-edu-item { margin-bottom: 12px; }
+    .cv-edu-title { font-size: 14px; font-weight: 600; color: var(--dark-900); }
+    .cv-edu-sub   { font-size: 12px; color: #888; margin-top: 2px; }
+    .cv-print-btn {
+      background: var(--dark-900); color: var(--white);
+      border: none; padding: 11px 24px;
+      border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+      margin-bottom: 20px;
+    }
+    .cv-print-btn:hover { background: var(--dark-700); }
+
+    /* Saved opportunities */
+    .saved-empty {
+      text-align: center; padding: 40px 20px; color: #aaa;
+    }
+    .saved-empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+    .p-alert {
+      padding: 10px 14px; border-radius: var(--radius-md);
+      font-size: 13px; margin-bottom: 14px;
+      background: var(--green-50); color: var(--green-800);
+      border: 1px solid var(--green-200); display: none;
+    }
+    .p-alert.visible { display: block; }
+
+    @media (max-width: 768px) {
+      .profile-layout { grid-template-columns: 1fr; }
+      .profile-sidebar { position: static; }
+      .p-row { grid-template-columns: 1fr; }
+      .cv-header { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">OpportuNet</span>
+        <span class="logo-country">Cameroon</span>
+      </div>
+    </a>
+    <div class="navbar-links">
+      <a href="index.html"         class="nav-link">Home</a>
+      <a href="opportunities.html" class="nav-link">Opportunities</a>
+      <a href="map.html"           class="nav-link">Map</a>
+      <a href="about.html"         class="nav-link">About</a>
+    </div>
+    <div class="navbar-actions" id="navbar-actions"></div>
+  </nav>
+
+  <!-- ═══ PROFILE LAYOUT ═══════════════════ -->
+  <div class="profile-layout">
+
+    <!-- Sidebar -->
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="profile-card-top">
+          <div class="profile-avatar" id="p-avatar">U</div>
+          <div class="profile-name"   id="p-name">User</div>
+          <div class="profile-region" id="p-region">Cameroon</div>
+        </div>
+        <div class="profile-card-body">
+          <div class="profile-nav-item active" onclick="showProfilePanel('overview')">
+            <span>👤</span> My Profile
+          </div>
+          <div class="profile-nav-item" onclick="showProfilePanel('skills')">
+            <span>⚡</span> Skills
+          </div>
+          <div class="profile-nav-item" onclick="showProfilePanel('education')">
+            <span>🎓</span> Education
+          </div>
+          <div class="profile-nav-item" onclick="showProfilePanel('experience')">
+            <span>💼</span> Experience
+          </div>
+          <div class="profile-nav-item" onclick="showProfilePanel('cv')">
+            <span>📄</span> My CV
+          </div>
+          <div class="profile-nav-item" onclick="showProfilePanel('saved')">
+            <span>🔖</span> Saved
+          </div>
+          <div class="profile-nav-item"
+               style="margin-top:8px;border-top:1px solid var(--gray-200);padding-top:10px;"
+               onclick="Auth.logout()">
+            <span>🚪</span> Logout
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-completion">
+        <div class="completion-title">Profile Completion</div>
+        <div class="completion-bar">
+          <div class="completion-fill" id="completion-fill" style="width:0%"></div>
+        </div>
+        <div class="completion-label" id="completion-label">0% complete</div>
+      </div>
+    </aside>
+
+    <!-- Main panels -->
+    <main class="profile-main">
+
+      <!-- Overview / Edit profile -->
+      <div class="profile-panel active" id="pp-overview">
+        <div class="p-card">
+          <div class="p-card-header">
+            <div class="p-card-title">Personal Information</div>
+          </div>
+          <div class="p-alert" id="overview-alert"></div>
+          <div class="p-row">
+            <div class="p-group">
+              <label class="p-label">Full Name</label>
+              <input type="text" class="p-input" id="p-full-name" />
+            </div>
+            <div class="p-group">
+              <label class="p-label">Email</label>
+              <input type="email" class="p-input" id="p-email" readonly
+                style="background:var(--gray-100);color:#888;" />
+            </div>
+          </div>
+          <div class="p-row">
+            <div class="p-group">
+              <label class="p-label">Region</label>
+              <input type="text" class="p-input" id="p-region-input" readonly
+                style="background:var(--gray-100);color:#888;" />
+            </div>
+            <div class="p-group">
+              <label class="p-label">Phone</label>
+              <input type="text" class="p-input" id="p-phone"
+                placeholder="+237 6XX XXX XXX" />
+            </div>
+          </div>
+          <div class="p-row single">
+            <div class="p-group">
+              <label class="p-label">Bio</label>
+              <textarea class="p-textarea" id="p-bio"
+                placeholder="Tell employers about yourself..."></textarea>
+            </div>
+          </div>
+          <button class="p-save-btn" onclick="saveOverview()">Save Changes</button>
+        </div>
+      </div>
+
+      <!-- Skills panel -->
+      <div class="profile-panel" id="pp-skills">
+        <div class="p-card">
+          <div class="p-card-header">
+            <div class="p-card-title">My Skills</div>
+          </div>
+          <div class="skills-wrap" id="skills-wrap"></div>
+          <div class="skill-add-row">
+            <input type="text" class="skill-input" id="skill-input"
+              placeholder="Add a skill e.g. JavaScript, Photoshop..." />
+            <button class="skill-add-btn" onclick="addSkill()">+ Add</button>
+          </div>
+          <div style="margin-top:16px;">
+            <button class="p-save-btn" onclick="saveSkills()">Save Skills</button>
+          </div>
+          <div class="p-alert" id="skills-alert" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Education panel -->
+      <div class="profile-panel" id="pp-education">
+        <div class="p-card">
+          <div class="p-card-header">
+            <div class="p-card-title">Education</div>
+          </div>
+          <div id="edu-list"></div>
+          <button class="add-item-btn" onclick="toggleEduForm()">
+            + Add Education
+          </button>
+          <div class="add-item-form" id="edu-form">
+            <div class="p-row">
+              <div class="p-group">
+                <label class="p-label">Institution</label>
+                <input type="text" class="p-input" id="edu-school"
+                  placeholder="e.g. University of Yaoundé I" />
+              </div>
+              <div class="p-group">
+                <label class="p-label">Degree / Certificate</label>
+                <input type="text" class="p-input" id="edu-degree"
+                  placeholder="e.g. BSc Computer Science" />
+              </div>
+            </div>
+            <div class="p-row">
+              <div class="p-group">
+                <label class="p-label">Year (Start – End)</label>
+                <input type="text" class="p-input" id="edu-year"
+                  placeholder="e.g. 2020 – 2024" />
+              </div>
+              <div class="p-group">
+                <label class="p-label">Grade / Result</label>
+                <input type="text" class="p-input" id="edu-grade"
+                  placeholder="e.g. First Class Honours" />
+              </div>
+            </div>
+            <button class="p-save-btn" onclick="addEducation()">Add</button>
+          </div>
+          <div class="p-alert" id="edu-alert" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Experience panel -->
+      <div class="profile-panel" id="pp-experience">
+        <div class="p-card">
+          <div class="p-card-header">
+            <div class="p-card-title">Work Experience</div>
+          </div>
+          <div id="exp-list"></div>
+          <button class="add-item-btn" onclick="toggleExpForm()">
+            + Add Experience
+          </button>
+          <div class="add-item-form" id="exp-form">
+            <div class="p-row">
+              <div class="p-group">
+                <label class="p-label">Job Title</label>
+                <input type="text" class="p-input" id="exp-title"
+                  placeholder="e.g. Web Developer Intern" />
+              </div>
+              <div class="p-group">
+                <label class="p-label">Company</label>
+                <input type="text" class="p-input" id="exp-company"
+                  placeholder="e.g. Orange Cameroun" />
+              </div>
+            </div>
+            <div class="p-row">
+              <div class="p-group">
+                <label class="p-label">Period</label>
+                <input type="text" class="p-input" id="exp-period"
+                  placeholder="e.g. Jan 2023 – Jun 2023" />
+              </div>
+              <div class="p-group">
+                <label class="p-label">Location</label>
+                <input type="text" class="p-input" id="exp-location"
+                  placeholder="e.g. Douala" />
+              </div>
+            </div>
+            <div class="p-row single">
+              <div class="p-group">
+                <label class="p-label">Description</label>
+                <textarea class="p-textarea" id="exp-desc" style="min-height:70px;"
+                  placeholder="What did you do in this role?"></textarea>
+              </div>
+            </div>
+            <button class="p-save-btn" onclick="addExperience()">Add</button>
+          </div>
+          <div class="p-alert" id="exp-alert" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- CV panel -->
+      <div class="profile-panel" id="pp-cv">
+        <button class="cv-print-btn" onclick="window.print()">
+          🖨 Print / Save as PDF
+        </button>
+        <div class="cv-preview" id="cv-preview">
+          <!-- Rendered by profile.js -->
+        </div>
+      </div>
+
+      <!-- Saved opportunities -->
+      <div class="profile-panel" id="pp-saved">
+        <div class="p-card">
+          <div class="p-card-header">
+            <div class="p-card-title">Saved Opportunities</div>
+          </div>
+          <div id="saved-list">
+            <div class="saved-empty">
+              <div class="saved-empty-icon">🔖</div>
+              <p>No saved opportunities yet.<br>
+                Click the ♡ on any listing to save it here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
+
+</body>
+</html>

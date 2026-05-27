@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opportunities — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-header {
+      background: var(--dark-800);
+      padding: 48px 28px 40px;
+      border-bottom: 1px solid var(--dark-700);
+    }
+    .page-header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 300;
+    }
+    .opp-search {
+      background: var(--gray-100);
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 64px;
+      z-index: 50;
+    }
+    .opp-search-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .opp-search input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 16px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      background: var(--white);
+      color: var(--dark-900);
+    }
+    .opp-search input:focus {
+      border-color: var(--green-400);
+      outline: none;
+    }
+    .opp-search select {
+      padding: 10px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      background: var(--white);
+      color: var(--dark-700);
+      cursor: pointer;
+    }
+    .opp-search select:focus { outline: none; border-color: var(--green-400); }
+    .opp-search-btn {
+      background: var(--green-700);
+      color: var(--white);
+      padding: 10px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .opp-search-btn:hover { background: var(--green-600); }
+    .btn-clear {
+      background: transparent;
+      color: #888;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      border: 1px solid var(--gray-200);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .btn-clear:hover { color: var(--dark-900); border-color: #aaa; }
+    .opp-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 28px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .sidebar {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      position: sticky;
+      top: 140px;
+    }
+    .sidebar-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark-900);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-clear {
+      font-size: 11px;
+      color: var(--green-700);
+      cursor: pointer;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-option:hover .filter-label { color: var(--green-700); }
+    .filter-option input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--green-700);
+      cursor: pointer;
+    }
+    .filter-label {
+      font-size: 13px;
+      color: var(--dark-700);
+      transition: var(--transition);
+      flex: 1;
+    }
+    .filter-count {
+      font-size: 11px;
+      color: #aaa;
+      background: var(--gray-100);
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+    .results-area { min-height: 400px; }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .results-count { font-size: 14px; color: #666; }
+    .results-count strong { color: var(--dark-900); font-weight: 600; }
+    .sort-select {
+      padding: 7px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      background: var(--white);
+      color: var(--dark-700);
+      cursor: pointer;
+    }
+    .sort-select:focus { outline: none; }
+    .opp-card-full {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      position: relative;
+    }
+    .opp-card-full:hover {
+      border-color: var(--green-400);
+      box-shadow: var(--shadow-hover);
+      transform: translateX(3px);
+    }
+    .opp-card-full:hover .opp-card-accent { transform: scaleY(1); }
+    .opp-card-accent {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--green-700);
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: var(--transition);
+    }
+    .opp-card-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: var(--green-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--green-800);
+      flex-shrink: 0;
+    }
+    .opp-card-body  { min-width: 0; }
+    .opp-card-org   { font-size: 12px; color: #888; margin-bottom: 3px; }
+    .opp-card-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark-900);
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .opp-card-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .opp-card-pill  {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--gray-100);
+      color: #666;
+    }
+    .opp-card-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .opp-card-salary   {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--green-700);
+    }
+    .opp-card-deadline {
+      font-size: 11px;
+      color: #B8860B;
+      background: var(--gold-100);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .opp-card-bookmark {
+      font-size: 18px;
+      color: #ccc;
+      cursor: pointer;
+      transition: var(--transition);
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .opp-card-bookmark:hover { color: var(--green-700); }
+    .empty-state        { text-align: center; padding: 80px 20px; color: #888; }
+    .empty-state-icon   { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3     {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--dark-900);
+      margin-bottom: 8px;
+    }
+    .empty-state p      { font-size: 14px; }
+    .active-filters     {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .active-filter-tag  {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      background: var(--green-50);
+      color: var(--green-800);
+      border: 1px solid var(--green-200);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .active-filter-tag button {
+      background: none;
+      border: none;
+      color: var(--green-700);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+    @media (max-width: 768px) {
+      .opp-layout     { grid-template-columns: 1fr; }
+      .sidebar        { position: static; }
+      .opp-card-full  { grid-template-columns: auto 1fr; }
+      .opp-card-right { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">OpportuNet</span>
+        <span class="logo-country">Cameroon</span>
+      </div>
+    </a>
+    <div class="navbar-links">
+      <a href="index.html"         class="nav-link">Home</a>
+      <a href="opportunities.html" class="nav-link active">Opportunities</a>
+      <a href="map.html"           class="nav-link">Map</a>
+      <a href="about.html"         class="nav-link">About</a>
+    </div>
+    <div class="navbar-actions" id="navbar-actions"></div>
+  </nav>
+
+  <!-- ═══ PAGE HEADER ══════════════════════ -->
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>All Opportunities</h1>
+      <p>Browse jobs, internships, training programs and grants across Cameroon</p>
+    </div>
+  </div>
+
+  <!-- ═══ SEARCH BAR ════════════════════════ -->
+  <div class="opp-search">
+    <div class="opp-search-inner">
+      <input
+        type="text"
+        id="opp-search-input"
+        placeholder="Search by title, organization, or keyword..."
+      />
+      <select id="opp-sort">
+        <option value="newest">Newest first</option>
+        <option value="deadline">Deadline soonest</option>
+      </select>
+      <button class="opp-search-btn" id="opp-search-btn">Search</button>
+      <button class="btn-clear"      id="opp-clear-btn">Clear all</button>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN LAYOUT ═══════════════════════ -->
+  <div class="opp-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        Filters
+        <span class="sidebar-clear" id="sidebar-clear">Reset</span>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Type</div>
+        <label class="filter-option">
+          <input type="checkbox" name="type" value="job" />
+          <span class="filter-label">Jobs</span>
+          <span class="filter-count">3</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="type" value="internship" />
+          <span class="filter-label">Internships</span>
+          <span class="filter-count">1</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="type" value="training" />
+          <span class="filter-label">Training</span>
+          <span class="filter-count">2</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="type" value="grant" />
+          <span class="filter-label">Grants</span>
+          <span class="filter-count">2</span>
+        </label>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Region</div>
+        <label class="filter-option">
+          <input type="checkbox" name="region" value="Centre" />
+          <span class="filter-label">Centre</span>
+          <span class="filter-count">2</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="region" value="Littoral" />
+          <span class="filter-label">Littoral</span>
+          <span class="filter-count">2</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="region" value="West" />
+          <span class="filter-label">West</span>
+          <span class="filter-count">1</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="region" value="Adamaoua" />
+          <span class="filter-label">Adamaoua</span>
+          <span class="filter-count">1</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="region" value="National" />
+          <span class="filter-label">National</span>
+          <span class="filter-count">2</span>
+        </label>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Sector</div>
+        <label class="filter-option">
+          <input type="checkbox" name="sector" value="technology" />
+          <span class="filter-label">Technology</span>
+          <span class="filter-count">3</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="sector" value="business" />
+          <span class="filter-label">Business</span>
+          <span class="filter-count">2</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="sector" value="health" />
+          <span class="filter-label">Health</span>
+          <span class="filter-count">1</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="sector" value="agriculture" />
+          <span class="filter-label">Agriculture</span>
+          <span class="filter-count">1</span>
+        </label>
+        <label class="filter-option">
+          <input type="checkbox" name="sector" value="education" />
+          <span class="filter-label">Education</span>
+          <span class="filter-count">1</span>
+        </label>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <main class="results-area">
+      <div class="results-header">
+        <div class="results-count" id="results-count">
+          Showing <strong>8</strong> opportunities
+        </div>
+        <select class="sort-select" id="sort-select">
+          <option value="newest">Newest first</option>
+          <option value="deadline">Deadline soonest</option>
+        </select>
+      </div>
+      <div class="active-filters" id="active-filters"></div>
+      <div id="results-list"></div>
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/opportunities.js"></script>
+  <script>updateNavbar();</script>
+
+</body>
+</html>

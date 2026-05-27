@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post an Opportunity — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .submit-layout {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    .submit-header {
+      margin-bottom: 40px;
+    }
+    .submit-header h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--dark-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .submit-header p {
+      font-size: 15px;
+      color: #888;
+      font-weight: 300;
+    }
+
+    /* Progress steps */
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .step-circle.done    { background: var(--green-700); color: var(--white); }
+    .step-circle.active  { background: var(--green-700); color: var(--white); box-shadow: 0 0 0 4px rgba(15,110,86,0.15); }
+    .step-circle.pending { background: var(--gray-200);  color: #aaa; }
+    .step-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      white-space: nowrap;
+    }
+    .step-label.active { color: var(--green-700); }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--gray-200);
+      margin: 0 8px;
+    }
+    .step-line.done { background: var(--green-700); }
+
+    /* Form card */
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .form-section {
+      padding: 32px;
+      border-bottom: 1px solid var(--gray-200);
+      display: none;
+    }
+    .form-section.active { display: block; }
+
+    .form-section-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark-900);
+      margin-bottom: 4px;
+    }
+    .form-section-sub {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+      font-weight: 300;
+    }
+
+    /* Form fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--dark-900);
+    }
+    .form-label span {
+      color: var(--green-600);
+      margin-left: 2px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      padding: 10px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--dark-900);
+      background: var(--white);
+      transition: var(--transition);
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.08);
+    }
+    .form-input.error,
+    .form-select.error,
+    .form-textarea.error {
+      border-color: #e53e3e;
+    }
+    .form-textarea { resize: vertical; min-height: 120px; }
+    .form-hint  { font-size: 11px; color: #aaa; }
+    .form-error { font-size: 11px; color: #e53e3e; display: none; }
+    .form-error.visible { display: block; }
+
+    /* Type selector */
+    .type-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .type-option {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .type-option:hover { border-color: var(--green-400); }
+    .type-option.selected {
+      border-color: var(--green-700);
+      background: var(--green-50);
+    }
+    .type-option-icon  { font-size: 22px; margin-bottom: 6px; }
+    .type-option-label { font-size: 12px; font-weight: 500; color: var(--dark-900); }
+
+    /* Requirements input */
+    .req-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .req-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      color: var(--dark-900);
+    }
+    .req-item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-600);
+      flex-shrink: 0;
+    }
+    .req-item-text { flex: 1; }
+    .req-remove {
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0;
+      line-height: 1;
+      transition: var(--transition);
+    }
+    .req-remove:hover { color: #e53e3e; }
+
+    .req-add-row {
+      display: flex;
+      gap: 8px;
+    }
+    .req-add-input {
+      flex: 1;
+      padding: 9px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: var(--font-body);
+    }
+    .req-add-input:focus { outline: none; border-color: var(--green-400); }
+    .req-add-btn {
+      background: var(--green-700);
+      color: var(--white);
+      border: none;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .req-add-btn:hover { background: var(--green-600); }
+
+    /* Form footer */
+    .form-footer {
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--gray-100);
+    }
+    .btn-prev {
+      background: transparent;
+      color: #666;
+      border: 1px solid var(--gray-200);
+      padding: 11px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .btn-prev:hover { color: var(--dark-900); border-color: #aaa; }
+    .btn-next {
+      background: var(--green-700);
+      color: var(--white);
+      border: none;
+      padding: 11px 28px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-next:hover { background: var(--green-600); }
+
+    /* Success screen */
+    .success-screen {
+      text-align: center;
+      padding: 64px 32px;
+      display: none;
+    }
+    .success-screen.visible { display: block; }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--green-50);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+    .success-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--dark-900);
+      margin-bottom: 10px;
+    }
+    .success-sub {
+      font-size: 15px;
+      color: #888;
+      margin-bottom: 32px;
+      font-weight: 300;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .success-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .form-row        { grid-template-columns: 1fr; }
+      .form-row.triple { grid-template-columns: 1fr; }
+      .type-selector   { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">OpportuNet</span>
+        <span class="logo-country">Cameroon</span>
+      </div>
+    </a>
+    <div class="navbar-links">
+      <a href="index.html"         class="nav-link">Home</a>
+      <a href="opportunities.html" class="nav-link">Opportunities</a>
+      <a href="map.html"           class="nav-link">Map</a>
+      <a href="about.html"         class="nav-link">About</a>
+    </div>
+    <div class="navbar-actions">
+      <button class="btn-ghost"   onclick="window.location.href='opportunities.html'">Browse All</button>
+      <button class="btn-primary" onclick="window.location.href='submit.html'">Post Opportunity</button>
+    </div>
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ═════════════════════ -->
+  <div class="submit-layout">
+
+    <div class="submit-header">
+      <h1>Post an Opportunity</h1>
+      <p>Share a job, internship, training program or grant with Cameroonian youth</p>
+    </div>
+
+    <!-- Progress steps -->
+    <div class="progress-steps">
+      <div class="step">
+        <div class="step-circle active" id="step-circle-1">1</div>
+        <span class="step-label active" id="step-label-1">Organization</span>
+      </div>
+      <div class="step-line" id="step-line-1"></div>
+      <div class="step">
+        <div class="step-circle pending" id="step-circle-2">2</div>
+        <span class="step-label" id="step-label-2">Opportunity</span>
+      </div>
+      <div class="step-line" id="step-line-2"></div>
+      <div class="step">
+        <div class="step-circle pending" id="step-circle-3">3</div>
+        <span class="step-label" id="step-label-3">Details</span>
+      </div>
+      <div class="step-line" id="step-line-3"></div>
+      <div class="step">
+        <div class="step-circle pending" id="step-circle-4">4</div>
+        <span class="step-label" id="step-label-4">Review</span>
+      </div>
+    </div>
+
+    <!-- Form card -->
+    <div class="form-card">
+
+      <!-- Step 1: Organization -->
+      <div class="form-section active" id="section-1">
+        <div class="form-section-title">Organization Information</div>
+        <div class="form-section-sub">Tell us about the organization posting this opportunity</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Organization Name <span>*</span></label>
+            <input type="text" class="form-input" id="org-name"
+              placeholder="e.g. TechHub Yaoundé" />
+            <span class="form-error" id="err-org-name">Please enter organization name</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Organization Type <span>*</span></label>
+            <select class="form-select" id="org-type">
+              <option value="">Select type...</option>
+              <option value="company">Private Company</option>
+              <option value="ngo">NGO / Non-profit</option>
+              <option value="government">Government Ministry</option>
+              <option value="university">University / School</option>
+              <option value="international">International Organization</option>
+              <option value="startup">Startup</option>
+            </select>
+            <span class="form-error" id="err-org-type">Please select organization type</span>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label">Organization Description <span>*</span></label>
+            <textarea class="form-textarea" id="org-description"
+              placeholder="Briefly describe what your organization does, its mission and sector of activity..."></textarea>
+            <span class="form-error" id="err-org-description">Please describe your organization</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Contact Email <span>*</span></label>
+            <input type="email" class="form-input" id="org-email"
+              placeholder="applications@yourorg.cm" />
+            <span class="form-error" id="err-org-email">Please enter a valid email</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Website</label>
+            <input type="text" class="form-input" id="org-website"
+              placeholder="https://yourorganization.cm" />
+            <span class="form-hint">Optional</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Opportunity basics -->
+      <div class="form-section" id="section-2">
+        <div class="form-section-title">Opportunity Details</div>
+        <div class="form-section-sub">Tell us about the opportunity you are offering</div>
+
+        <div class="form-group" style="margin-bottom:20px;">
+          <label class="form-label">Opportunity Type <span>*</span></label>
+          <div class="type-selector">
+            <div class="type-option" onclick="selectType('job', this)">
+              <div class="type-option-icon">💼</div>
+              <div class="type-option-label">Job</div>
+            </div>
+            <div class="type-option" onclick="selectType('internship', this)">
+              <div class="type-option-icon">🎓</div>
+              <div class="type-option-label">Internship</div>
+            </div>
+            <div class="type-option" onclick="selectType('training', this)">
+              <div class="type-option-icon">📚</div>
+              <div class="type-option-label">Training</div>
+            </div>
+            <div class="type-option" onclick="selectType('grant', this)">
+              <div class="type-option-icon">💰</div>
+              <div class="type-option-label">Grant</div>
+            </div>
+          </div>
+          <span class="form-error" id="err-type">Please select an opportunity type</span>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label">Title / Role <span>*</span></label>
+            <input type="text" class="form-input" id="opp-title"
+              placeholder="e.g. Junior Web Developer" />
+            <span class="form-error" id="err-opp-title">Please enter a title</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Sector <span>*</span></label>
+            <select class="form-select" id="opp-sector">
+              <option value="">Select sector...</option>
+              <option value="technology">Technology</option>
+              <option value="business">Business</option>
+              <option value="health">Health</option>
+              <option value="agriculture">Agriculture</option>
+              <option value="education">Education</option>
+              <option value="finance">Finance</option>
+              <option value="engineering">Engineering</option>
+              <option value="arts">Arts & Media</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="form-error" id="err-opp-sector">Please select a sector</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration <span>*</span></label>
+            <input type="text" class="form-input" id="opp-duration"
+              placeholder="e.g. Full-time, 3 months, 6 weeks" />
+            <span class="form-error" id="err-opp-duration">Please enter duration</span>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label">Description <span>*</span></label>
+            <textarea class="form-textarea" id="opp-description" style="min-height:140px;"
+              placeholder="Describe the opportunity in detail. What will the person do? What is the work environment like?"></textarea>
+            <span class="form-error" id="err-opp-description">Please describe the opportunity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Details -->
+      <div class="form-section" id="section-3">
+        <div class="form-section-title">Location, Compensation & Requirements</div>
+        <div class="form-section-sub">Provide the specific details candidates need to know</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Region <span>*</span></label>
+            <select class="form-select" id="opp-region">
+              <option value="">Select region...</option>
+              <option value="Centre">Centre</option>
+              <option value="Littoral">Littoral</option>
+              <option value="West">West</option>
+              <option value="North West">North West</option>
+              <option value="South West">South West</option>
+              <option value="Adamaoua">Adamaoua</option>
+              <option value="North">North</option>
+              <option value="Far North">Far North</option>
+              <option value="South">South</option>
+              <option value="East">East</option>
+              <option value="National">National (Remote/All regions)</option>
+            </select>
+            <span class="form-error" id="err-opp-region">Please select a region</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">City <span>*</span></label>
+            <input type="text" class="form-input" id="opp-city"
+              placeholder="e.g. Yaoundé" />
+            <span class="form-error" id="err-opp-city">Please enter the city</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Salary / Compensation</label>
+            <input type="text" class="form-input" id="opp-salary"
+              placeholder="e.g. 150,000 XAF/mo or Free" />
+            <span class="form-hint">Leave blank if not applicable</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Application Deadline <span>*</span></label>
+            <input type="date" class="form-input" id="opp-deadline" />
+            <span class="form-error" id="err-opp-deadline">Please select a deadline</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Requirements</label>
+          <div class="req-list" id="req-list">
+            <!-- Added dynamically -->
+          </div>
+          <div class="req-add-row">
+            <input type="text" class="req-add-input" id="req-input"
+              placeholder="Add a requirement and press Add..." />
+            <button class="req-add-btn" onclick="addRequirement()">+ Add</button>
+          </div>
+          <span class="form-hint" style="margin-top:4px;">
+            e.g. "Bachelor's degree in Computer Science", "Age 18–35"
+          </span>
+        </div>
+      </div>
+
+      <!-- Step 4: Review -->
+      <div class="form-section" id="section-4">
+        <div class="form-section-title">Review Your Listing</div>
+        <div class="form-section-sub">Check everything looks correct before submitting</div>
+        <div id="review-content">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Success screen -->
+      <div class="success-screen" id="success-screen">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Opportunity Posted!</div>
+        <div class="success-sub">
+          Your listing has been submitted successfully. It will appear on
+          OpportuNet Cameroon once reviewed by our team.
+        </div>
+        <div class="success-actions">
+          <button class="btn-primary"
+            onclick="window.location.href='opportunities.html'"
+            style="padding:12px 28px;font-size:14px;border-radius:10px;">
+            Browse Opportunities
+          </button>
+          <button class="btn-ghost"
+            onclick="window.location.href='submit.html'"
+            style="padding:12px 28px;font-size:14px;border-radius:10px;
+                   color:var(--dark-900);border-color:var(--gray-200);">
+            Post Another
+          </button>
+        </div>
+      </div>
+
+      <!-- Form footer -->
+      <div class="form-footer" id="form-footer">
+        <button class="btn-prev" id="btn-prev" onclick="prevStep()"
+          style="visibility:hidden;">
+          ← Previous
+        </button>
+        <button class="btn-next" id="btn-next" onclick="nextStep()">
+          Next Step →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script>
+    var currentStep  = 1;
+    var totalSteps   = 4;
+    var selectedType = '';
+    var requirements = [];
+
+    // ─── Type selector ──────────────────
+    window.selectType = function(type, el) {
+      selectedType = type;
+      document.querySelectorAll('.type-option').forEach(function(o) {
+        o.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      document.getElementById('err-type').classList.remove('visible');
+    };
+
+    // ─── Requirements ───────────────────
+    window.addRequirement = function() {
+      var input = document.getElementById('req-input');
+      var val   = input.value.trim();
+      if (!val) return;
+      requirements.push(val);
+      input.value = '';
+      renderRequirements();
+    };
+
+    document.getElementById('req-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); addRequirement(); }
+    });
+
+    function renderRequirements() {
+      var list = document.getElementById('req-list');
+      if (requirements.length === 0) { list.innerHTML = ''; return; }
+      list.innerHTML = requirements.map(function(req, i) {
+        return (
+          '<div class="req-item">' +
+            '<div class="req-item-dot"></div>' +
+            '<span class="req-item-text">' + req + '</span>' +
+            '<button class="req-remove" onclick="removeReq(' + i + ')">×</button>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    window.removeReq = function(i) {
+      requirements.splice(i, 1);
+      renderRequirements();
+    };
+
+    // ─── Validation ─────────────────────
+    function validateStep(step) {
+      var valid = true;
+
+      function check(id, errId, condition) {
+        var el  = document.getElementById(id);
+        var err = document.getElementById(errId);
+        if (!condition) {
+          el.classList.add('error');
+          err.classList.add('visible');
+          valid = false;
+        } else {
+          el.classList.remove('error');
+          err.classList.remove('visible');
+        }
+      }
+
+      if (step === 1) {
+        check('org-name',        'err-org-name',        document.getElementById('org-name').value.trim() !== '');
+        check('org-type',        'err-org-type',        document.getElementById('org-type').value !== '');
+        check('org-description', 'err-org-description', document.getElementById('org-description').value.trim().length > 20);
+        check('org-email',       'err-org-email',       document.getElementById('org-email').value.includes('@'));
+      }
+
+      if (step === 2) {
+        if (!selectedType) {
+          document.getElementById('err-type').classList.add('visible');
+          valid = false;
+        }
+        check('opp-title',       'err-opp-title',       document.getElementById('opp-title').value.trim() !== '');
+        check('opp-sector',      'err-opp-sector',      document.getElementById('opp-sector').value !== '');
+        check('opp-duration',    'err-opp-duration',    document.getElementById('opp-duration').value.trim() !== '');
+        check('opp-description', 'err-opp-description', document.getElementById('opp-description').value.trim().length > 20);
+      }
+
+      if (step === 3) {
+        check('opp-region',   'err-opp-region',   document.getElementById('opp-region').value !== '');
+        check('opp-city',     'err-opp-city',     document.getElementById('opp-city').value.trim() !== '');
+        check('opp-deadline', 'err-opp-deadline', document.getElementById('opp-deadline').value !== '');
+      }
+
+      return valid;
+    }
+
+    // ─── Review render ──────────────────
+    function renderReview() {
+      var deadline = document.getElementById('opp-deadline').value;
+      var dateStr  = deadline
+        ? new Date(deadline).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
+        : 'Not set';
+
+      var reqHTML = requirements.length > 0
+        ? requirements.map(function(r) {
+            return '<li style="margin-bottom:4px;font-size:14px;color:#444;">' + r + '</li>';
+          }).join('')
+        : '<li style="font-size:13px;color:#aaa;">No requirements added</li>';
+
+      document.getElementById('review-content').innerHTML =
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">' +
+
+          '<div style="background:var(--gray-100);border-radius:12px;padding:20px;">' +
+            '<div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;' +
+                        'letter-spacing:0.06em;margin-bottom:14px;">Organization</div>' +
+            '<div style="font-size:15px;font-weight:600;color:var(--dark-900);margin-bottom:4px;">' +
+              document.getElementById('org-name').value +
+            '</div>' +
+            '<div style="font-size:13px;color:#888;margin-bottom:8px;">' +
+              document.getElementById('org-type').value +
+            '</div>' +
+            '<div style="font-size:13px;color:#444;">' +
+              document.getElementById('org-email').value +
+            '</div>' +
+          '</div>' +
+
+          '<div style="background:var(--gray-100);border-radius:12px;padding:20px;">' +
+            '<div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;' +
+                        'letter-spacing:0.06em;margin-bottom:14px;">Opportunity</div>' +
+            '<div style="font-size:15px;font-weight:600;color:var(--dark-900);margin-bottom:4px;">' +
+              document.getElementById('opp-title').value +
+            '</div>' +
+            '<div style="font-size:13px;color:#888;margin-bottom:4px;">' +
+              selectedType + ' · ' + document.getElementById('opp-sector').value +
+            '</div>' +
+            '<div style="font-size:13px;color:#888;">' +
+              document.getElementById('opp-city').value + ', ' +
+              document.getElementById('opp-region').value +
+            '</div>' +
+          '</div>' +
+
+          '<div style="background:var(--gray-100);border-radius:12px;padding:20px;">' +
+            '<div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;' +
+                        'letter-spacing:0.06em;margin-bottom:14px;">Compensation & Deadline</div>' +
+            '<div style="font-size:15px;font-weight:600;color:var(--green-700);margin-bottom:4px;">' +
+              (document.getElementById('opp-salary').value || 'Not specified') +
+            '</div>' +
+            '<div style="font-size:13px;color:#888;">Deadline: ' + dateStr + '</div>' +
+          '</div>' +
+
+          '<div style="background:var(--gray-100);border-radius:12px;padding:20px;">' +
+            '<div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;' +
+                        'letter-spacing:0.06em;margin-bottom:14px;">Requirements</div>' +
+            '<ul style="padding-left:16px;margin:0;">' + reqHTML + '</ul>' +
+          '</div>' +
+
+        '</div>';
+    }
+
+    // ─── Step navigation ────────────────
+    function updateProgress(step) {
+      for (var i = 1; i <= totalSteps; i++) {
+        var circle = document.getElementById('step-circle-' + i);
+        var label  = document.getElementById('step-label-' + i);
+        if (i < step) {
+          circle.className = 'step-circle done';
+          circle.textContent = '✓';
+        } else if (i === step) {
+          circle.className = 'step-circle active';
+          circle.textContent = i;
+          label.className  = 'step-label active';
+        } else {
+          circle.className = 'step-circle pending';
+          circle.textContent = i;
+          label.className  = 'step-label';
+        }
+        if (i < totalSteps) {
+          var line = document.getElementById('step-line-' + i);
+          line.className = i < step ? 'step-line done' : 'step-line';
+        }
+      }
+
+      // Prev button
+      var prevBtn = document.getElementById('btn-prev');
+      prevBtn.style.visibility = step === 1 ? 'hidden' : 'visible';
+
+      // Next button label
+      var nextBtn = document.getElementById('btn-next');
+      nextBtn.textContent = step === totalSteps ? '🚀  Submit Listing' : 'Next Step →';
+    }
+
+    window.nextStep = function() {
+      if (!validateStep(currentStep)) return;
+
+      if (currentStep === totalSteps) {
+        // Submit
+        document.getElementById('section-' + currentStep).classList.remove('active');
+        document.getElementById('form-footer').style.display = 'none';
+        document.getElementById('success-screen').classList.add('visible');
+        return;
+      }
+
+      document.getElementById('section-' + currentStep).classList.remove('active');
+      currentStep++;
+      document.getElementById('section-' + currentStep).classList.add('active');
+      updateProgress(currentStep);
+
+      if (currentStep === totalSteps) renderReview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.prevStep = function() {
+      if (currentStep === 1) return;
+      document.getElementById('section-' + currentStep).classList.remove('active');
+      currentStep--;
+      document.getElementById('section-' + currentStep).classList.add('active');
+      updateProgress(currentStep);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    updateProgress(1);
+  </script>
+
+</body>
+</html>

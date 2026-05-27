@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: var(--gray-100); min-height: 100vh; }
+
+    .signup-layout {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    .signup-logo {
+      display: flex; align-items: center;
+      gap: 10px; margin-bottom: 40px;
+      text-decoration: none;
+    }
+    .signup-logo-icon {
+      width: 38px; height: 38px;
+      background: var(--green-700);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+    }
+    .signup-logo-name {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700; color: var(--dark-900);
+    }
+    .signup-logo-country {
+      font-size: 11px; color: var(--green-700);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    .signup-header { margin-bottom: 32px; }
+    .signup-header h1 {
+      font-family: var(--font-display);
+      font-size: 30px; font-weight: 700;
+      color: var(--dark-900); letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .signup-header p {
+      font-size: 14px; color: #888; font-weight: 300;
+    }
+    .signup-header p a {
+      color: var(--green-700); font-weight: 500;
+      text-decoration: none;
+    }
+
+    /* Account type selector */
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-bottom: 32px;
+    }
+    .type-card {
+      background: var(--white);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+    .type-card:hover { border-color: var(--green-400); }
+    .type-card.selected {
+      border-color: var(--green-700);
+      background: var(--green-50);
+    }
+    .type-card-icon { font-size: 36px; margin-bottom: 10px; }
+    .type-card-title {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700;
+      color: var(--dark-900); margin-bottom: 6px;
+    }
+    .type-card-desc {
+      font-size: 12px; color: #888;
+      line-height: 1.6; font-weight: 300;
+    }
+    .type-card-check {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--green-700);
+      color: white; font-size: 12px;
+      display: none; align-items: center;
+      justify-content: center;
+      margin: 10px auto 0;
+    }
+    .type-card.selected .type-card-check { display: flex; }
+
+    /* Form card */
+    .signup-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .signup-card-header {
+      background: var(--dark-800);
+      padding: 20px 28px;
+      font-family: var(--font-display);
+      font-size: 15px; font-weight: 600;
+      color: var(--white);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .signup-card-body { padding: 28px; }
+
+    .s-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 18px;
+    }
+    .s-row.single { grid-template-columns: 1fr; }
+
+    .s-group { display: flex; flex-direction: column; gap: 6px; }
+    .s-label {
+      font-size: 13px; font-weight: 500; color: var(--dark-900);
+    }
+    .s-label span { color: var(--green-600); margin-left: 2px; }
+    .s-input, .s-select, .s-textarea {
+      padding: 10px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 14px; font-family: var(--font-body);
+      color: var(--dark-900); background: var(--white);
+      transition: var(--transition);
+    }
+    .s-input:focus, .s-select:focus, .s-textarea:focus {
+      outline: none; border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.08);
+    }
+    .s-input.error, .s-select.error { border-color: #e53e3e; }
+    .s-textarea { resize: vertical; min-height: 90px; }
+    .s-error {
+      font-size: 11px; color: #e53e3e; display: none;
+    }
+    .s-error.visible { display: block; }
+    .s-hint { font-size: 11px; color: #aaa; }
+
+    /* Password strength */
+    .password-strength {
+      margin-top: 6px;
+      display: flex; gap: 4px; align-items: center;
+    }
+    .strength-bar {
+      flex: 1; height: 3px; border-radius: 2px;
+      background: var(--gray-200); transition: var(--transition);
+    }
+    .strength-label {
+      font-size: 11px; color: #aaa; white-space: nowrap;
+    }
+
+    /* Company-specific / Youth-specific panels */
+    .extra-fields { display: none; }
+    .extra-fields.visible { display: block; }
+
+    /* Alert */
+    .signup-alert {
+      padding: 12px 16px; border-radius: var(--radius-md);
+      font-size: 13px; margin-bottom: 20px; display: none;
+    }
+    .signup-alert.error {
+      background: #FEF0F0; color: #8a1a1a;
+      border: 1px solid #f5c6c6; display: block;
+    }
+    .signup-alert.success {
+      background: var(--green-50); color: var(--green-800);
+      border: 1px solid var(--green-200); display: block;
+    }
+
+    .signup-submit {
+      width: 100%; background: var(--green-700);
+      color: var(--white); border: none;
+      padding: 13px; border-radius: var(--radius-md);
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body); margin-top: 8px;
+    }
+    .signup-submit:hover { background: var(--green-600); }
+    .signup-submit:disabled { background: #aaa; cursor: not-allowed; }
+
+    .signup-terms {
+      font-size: 12px; color: #aaa;
+      text-align: center; margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .type-grid { grid-template-columns: 1fr; }
+      .s-row     { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="signup-layout">
+
+    <!-- Logo -->
+    <a href="index.html" class="signup-logo">
+      <div class="signup-logo-icon">🌿</div>
+      <div>
+        <div class="signup-logo-name">OpportuNet</div>
+        <div class="signup-logo-country">Cameroon</div>
+      </div>
+    </a>
+
+    <!-- Header -->
+    <div class="signup-header">
+      <h1>Create your account</h1>
+      <p>Already have one? <a href="login.html">Sign in →</a></p>
+    </div>
+
+    <!-- Account type -->
+    <div style="font-size:13px;font-weight:500;color:var(--dark-900);margin-bottom:12px;">
+      I am a... <span style="color:var(--green-600);">*</span>
+    </div>
+    <div class="type-grid">
+      <div class="type-card" id="type-company" onclick="selectAccountType('company')">
+        <div class="type-card-icon">🏢</div>
+        <div class="type-card-title">Company / Organization</div>
+        <div class="type-card-desc">
+          Post jobs, internships, training programs and grants for Cameroonian youth
+        </div>
+        <div class="type-card-check">✓</div>
+      </div>
+      <div class="type-card" id="type-youth" onclick="selectAccountType('youth')">
+        <div class="type-card-icon">👤</div>
+        <div class="type-card-title">Youth / Job Seeker</div>
+        <div class="type-card-desc">
+          Build your profile, showcase your skills and find opportunities in your region
+        </div>
+        <div class="type-card-check">✓</div>
+      </div>
+    </div>
+    <div class="s-error visible" id="err-type" style="margin-bottom:16px;display:none;">
+      Please select an account type
+    </div>
+
+    <!-- Form card -->
+    <div class="signup-card">
+      <div class="signup-card-header">
+        <span>📋</span> Account Information
+      </div>
+      <div class="signup-card-body">
+
+        <div class="signup-alert" id="signup-alert"></div>
+
+        <!-- Basic info (shared) -->
+        <div class="s-row">
+          <div class="s-group">
+            <label class="s-label">
+              <span id="name-label">Full Name</span>
+              <span>*</span>
+            </label>
+            <input type="text" class="s-input" id="s-name"
+              placeholder="Your full name" />
+            <span class="s-error" id="err-name">Please enter your name</span>
+          </div>
+          <div class="s-group">
+            <label class="s-label">Email Address <span>*</span></label>
+            <input type="email" class="s-input" id="s-email"
+              placeholder="your@email.com" />
+            <span class="s-error" id="err-email">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="s-row">
+          <div class="s-group">
+            <label class="s-label">Password <span>*</span></label>
+            <input type="password" class="s-input" id="s-password"
+              placeholder="Min. 6 characters"
+              oninput="checkStrength(this.value)" />
+            <div class="password-strength">
+              <div class="strength-bar" id="bar1"></div>
+              <div class="strength-bar" id="bar2"></div>
+              <div class="strength-bar" id="bar3"></div>
+              <div class="strength-bar" id="bar4"></div>
+              <span class="strength-label" id="strength-label"></span>
+            </div>
+            <span class="s-error" id="err-password">
+              Password must be at least 6 characters
+            </span>
+          </div>
+          <div class="s-group">
+            <label class="s-label">Confirm Password <span>*</span></label>
+            <input type="password" class="s-input" id="s-confirm"
+              placeholder="Repeat password" />
+            <span class="s-error" id="err-confirm">Passwords do not match</span>
+          </div>
+        </div>
+
+        <!-- Company-specific fields -->
+        <div class="extra-fields" id="company-fields">
+          <div style="height:1px;background:var(--gray-200);margin:8px 0 20px;"></div>
+          <div style="font-size:12px;font-weight:600;color:#888;
+                      text-transform:uppercase;letter-spacing:0.06em;
+                      margin-bottom:16px;">Company Details</div>
+          <div class="s-row">
+            <div class="s-group">
+              <label class="s-label">Company Type <span>*</span></label>
+              <select class="s-select" id="s-company-type">
+                <option value="">Select type...</option>
+                <option value="Private Company">Private Company</option>
+                <option value="NGO / Non-profit">NGO / Non-profit</option>
+                <option value="Government Ministry">Government Ministry</option>
+                <option value="University / School">University / School</option>
+                <option value="International Organization">International Organization</option>
+                <option value="Startup">Startup</option>
+              </select>
+              <span class="s-error" id="err-company-type">
+                Please select company type
+              </span>
+            </div>
+            <div class="s-group">
+              <label class="s-label">Region <span>*</span></label>
+              <select class="s-select" id="s-company-region">
+                <option value="">Select region...</option>
+                <option>Centre</option>
+                <option>Littoral</option>
+                <option>West</option>
+                <option>North West</option>
+                <option>South West</option>
+                <option>Adamaoua</option>
+                <option>North</option>
+                <option>Far North</option>
+                <option>South</option>
+                <option>East</option>
+              </select>
+              <span class="s-error" id="err-company-region">
+                Please select region
+              </span>
+            </div>
+          </div>
+          <div class="s-row single">
+            <div class="s-group">
+              <label class="s-label">Company Description <span>*</span></label>
+              <textarea class="s-textarea" id="s-company-desc"
+                placeholder="What does your organization do? What is your mission?">
+              </textarea>
+              <span class="s-error" id="err-company-desc">
+                Please describe your company
+              </span>
+            </div>
+          </div>
+          <div class="s-row single">
+            <div class="s-group">
+              <label class="s-label">Website</label>
+              <input type="text" class="s-input" id="s-company-website"
+                placeholder="https://yourcompany.cm" />
+              <span class="s-hint">Optional</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Youth-specific fields -->
+        <div class="extra-fields" id="youth-fields">
+          <div style="height:1px;background:var(--gray-200);margin:8px 0 20px;"></div>
+          <div style="font-size:12px;font-weight:600;color:#888;
+                      text-transform:uppercase;letter-spacing:0.06em;
+                      margin-bottom:16px;">Personal Details</div>
+          <div class="s-row">
+            <div class="s-group">
+              <label class="s-label">Region <span>*</span></label>
+              <select class="s-select" id="s-youth-region">
+                <option value="">Select region...</option>
+                <option>Centre</option>
+                <option>Littoral</option>
+                <option>West</option>
+                <option>North West</option>
+                <option>South West</option>
+                <option>Adamaoua</option>
+                <option>North</option>
+                <option>Far North</option>
+                <option>South</option>
+                <option>East</option>
+              </select>
+              <span class="s-error" id="err-youth-region">
+                Please select your region
+              </span>
+            </div>
+            <div class="s-group">
+              <label class="s-label">Phone Number</label>
+              <input type="text" class="s-input" id="s-phone"
+                placeholder="+237 6XX XXX XXX" />
+              <span class="s-hint">Optional</span>
+            </div>
+          </div>
+          <div class="s-row single">
+            <div class="s-group">
+              <label class="s-label">Short Bio</label>
+              <textarea class="s-textarea" id="s-bio"
+                placeholder="Tell us about yourself, your background and what you're looking for...">
+              </textarea>
+              <span class="s-hint">Optional — you can add this later</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="signup-alert" id="signup-alert-bottom"></div>
+
+        <button class="signup-submit" id="signup-btn" onclick="handleSignup()">
+          Create Account →
+        </button>
+
+        <div class="signup-terms">
+          By creating an account you agree to our terms of service.
+          Your data is stored locally in your browser.
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    var selectedType = '';
+
+    // Redirect if already logged in
+    if (Auth.getCurrentUser()) {
+      var u = Auth.getCurrentUser();
+      window.location.href = u.type === 'company' ? 'dashboard.html' : 'profile.html';
+    }
+
+    // ─── Account type selector ──────────
+    window.selectAccountType = function(type) {
+      selectedType = type;
+      document.getElementById('type-company').classList.toggle('selected', type === 'company');
+      document.getElementById('type-youth').classList.toggle('selected', type === 'youth');
+      document.getElementById('company-fields').classList.toggle('visible', type === 'company');
+      document.getElementById('youth-fields').classList.toggle('visible',   type === 'youth');
+      document.getElementById('err-type').style.display = 'none';
+      document.getElementById('name-label').textContent =
+        type === 'company' ? 'Company Name' : 'Full Name';
+    };
+
+    // ─── Password strength ───────────────
+    window.checkStrength = function(val) {
+      var strength = 0;
+      if (val.length >= 6)  strength++;
+      if (val.length >= 10) strength++;
+      if (/[A-Z]/.test(val) && /[0-9]/.test(val)) strength++;
+      if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+      var colors = ['#e53e3e','#e53e3e','#d4a017','#1D9E75'];
+      var labels = ['Weak','Weak','Fair','Strong'];
+      var bars   = ['bar1','bar2','bar3','bar4'];
+
+      bars.forEach(function(id, i) {
+        document.getElementById(id).style.background =
+          i < strength ? colors[strength - 1] : 'var(--gray-200)';
+      });
+      document.getElementById('strength-label').textContent =
+        val.length > 0 ? labels[strength - 1] || '' : '';
+    };
+
+    // ─── Validation ──────────────────────
+    function validate() {
+      var valid = true;
+
+      function check(id, errId, condition) {
+        var el  = document.getElementById(id);
+        var err = document.getElementById(errId);
+        if (!condition) {
+          if (el) el.classList.add('error');
+          if (err) err.classList.add('visible');
+          valid = false;
+        } else {
+          if (el) el.classList.remove('error');
+          if (err) err.classList.remove('visible');
+        }
+      }
+
+      if (!selectedType) {
+        document.getElementById('err-type').style.display = 'block';
+        valid = false;
+      }
+
+      var name     = document.getElementById('s-name').value.trim();
+      var email    = document.getElementById('s-email').value.trim();
+      var password = document.getElementById('s-password').value;
+      var confirm  = document.getElementById('s-confirm').value;
+
+      check('s-name',     'err-name',     name.length > 1);
+      check('s-email',    'err-email',    email.includes('@'));
+      check('s-password', 'err-password', password.length >= 6);
+      check('s-confirm',  'err-confirm',  confirm === password && confirm !== '');
+
+      if (selectedType === 'company') {
+        check('s-company-type',   'err-company-type',   document.getElementById('s-company-type').value !== '');
+        check('s-company-region', 'err-company-region', document.getElementById('s-company-region').value !== '');
+        check('s-company-desc',   'err-company-desc',   document.getElementById('s-company-desc').value.trim().length > 10);
+      }
+
+      if (selectedType === 'youth') {
+        check('s-youth-region', 'err-youth-region', document.getElementById('s-youth-region').value !== '');
+      }
+
+      return valid;
+    }
+
+    // ─── Handle signup ───────────────────
+    window.handleSignup = function() {
+      var alert = document.getElementById('signup-alert');
+      var btn   = document.getElementById('signup-btn');
+      alert.className = 'signup-alert';
+
+      if (!validate()) return;
+
+      btn.textContent = 'Creating account...';
+      btn.disabled    = true;
+
+      setTimeout(function() {
+        var data = {
+          type:     selectedType,
+          name:     document.getElementById('s-name').value.trim(),
+          email:    document.getElementById('s-email').value.trim(),
+          password: document.getElementById('s-password').value,
+        };
+
+        if (selectedType === 'company') {
+          data.companyType        = document.getElementById('s-company-type').value;
+          data.companyRegion      = document.getElementById('s-company-region').value;
+          data.companyDescription = document.getElementById('s-company-desc').value.trim();
+          data.companyWebsite     = document.getElementById('s-company-website').value.trim();
+        } else {
+          data.region = document.getElementById('s-youth-region').value;
+          data.phone  = document.getElementById('s-phone').value.trim();
+          data.bio    = document.getElementById('s-bio').value.trim();
+        }
+
+        var result = Auth.signup(data);
+
+        if (!result.success) {
+          alert.textContent = result.message;
+          alert.className   = 'signup-alert error';
+          btn.textContent   = 'Create Account →';
+          btn.disabled      = false;
+          return;
+        }
+
+        alert.textContent = '🎉 Account created! Redirecting...';
+        alert.className   = 'signup-alert success';
+
+        setTimeout(function() {
+          window.location.href = selectedType === 'company'
+            ? 'dashboard.html'
+            : 'profile.html';
+        }, 800);
+      }, 600);
+    };
+  </script>
+
+</body>
+</html>

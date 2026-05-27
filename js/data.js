@@ -1,0 +1,165 @@
+// ═══════════════════════════════════════
+// OpportuNet Cameroon — Central Data Store
+// All opportunity data lives here.
+// ═══════════════════════════════════════
+
+const OPPORTUNITIES = [
+  {
+    id: 1,
+    title: "Junior Web Developer",
+    organization: "TechHub Yaoundé",
+    orgShort: "TH",
+    type: "job",
+    region: "Centre",
+    city: "Yaoundé",
+    sector: "technology",
+    salary: "120,000 XAF/mo",
+    deadline: "June 15, 2026",
+    description: "We are looking for a motivated junior web developer to join our growing team. You will work on real-world web projects using HTML, CSS, JavaScript and basic PHP.",
+    requirements: ["HTML/CSS proficiency", "Basic JavaScript", "Team player", "HND or equivalent"],
+    duration: "Full-time",
+    posted: "May 10, 2026",
+    contact: "jobs@techhubyaounde.cm"
+  },
+  {
+    id: 2,
+    title: "Digital Marketing Bootcamp",
+    organization: "GIZ Cameroon",
+    orgShort: "GZ",
+    type: "training",
+    region: "Littoral",
+    city: "Douala",
+    sector: "business",
+    salary: "Free",
+    deadline: "May 28, 2026",
+    description: "A 6-week intensive training in digital marketing, social media management, and online advertising. Certificate awarded upon completion. Open to youth aged 18–35.",
+    requirements: ["Age 18–35", "Basic computer skills", "Motivation letter"],
+    duration: "6 weeks",
+    posted: "May 5, 2026",
+    contact: "training@giz-cameroon.org"
+  },
+  {
+    id: 3,
+    title: "Software Engineering Intern",
+    organization: "Orange Cameroun",
+    orgShort: "OC",
+    type: "internship",
+    region: "Littoral",
+    city: "Douala",
+    sector: "technology",
+    salary: "80,000 XAF/mo",
+    deadline: "May 30, 2026",
+    description: "3-month internship in our IT department. You will assist the development team in building and maintaining internal software tools and mobile applications.",
+    requirements: ["Computer Science student", "Python or Java basics", "Currently enrolled in university"],
+    duration: "3 months",
+    posted: "May 8, 2026",
+    contact: "internships@orange.cm"
+  },
+  {
+    id: 4,
+    title: "Youth Agri-Tech Startup Grant",
+    organization: "Ministry of Youth Affairs",
+    orgShort: "MY",
+    type: "grant",
+    region: "National",
+    city: "All Regions",
+    sector: "agriculture",
+    salary: "Up to 5,000,000 XAF",
+    deadline: "July 1, 2026",
+    description: "Government grant for youth-led agricultural technology startups. Projects must use technology to solve a farming challenge in Cameroon. Open to all regions.",
+    requirements: ["Age 18–35", "Registered business or project plan", "Cameroonian national"],
+    duration: "N/A",
+    posted: "May 1, 2026",
+    contact: "grants@minyouth.cm"
+  },
+  {
+    id: 5,
+    title: "Healthcare Data Analyst",
+    organization: "MSF Cameroon",
+    orgShort: "MS",
+    type: "job",
+    region: "Adamaoua",
+    city: "Ngaoundéré",
+    sector: "health",
+    salary: "200,000 XAF/mo",
+    deadline: "June 20, 2026",
+    description: "We need a data analyst to support health programme monitoring across our northern operations. You will manage databases, produce reports, and assist with field data collection.",
+    requirements: ["Excel/Google Sheets proficiency", "Statistics background", "French required", "English a plus"],
+    duration: "12 months",
+    posted: "May 12, 2026",
+    contact: "hr@msf-cameroon.org"
+  },
+  {
+    id: 6,
+    title: "Python Programming Masterclass",
+    organization: "Cameroon Tech Academy",
+    orgShort: "CA",
+    type: "training",
+    region: "West",
+    city: "Bafoussam",
+    sector: "technology",
+    salary: "15,000 XAF",
+    deadline: "June 5, 2026",
+    description: "8-week Python programming course taught by industry professionals. Covers fundamentals to intermediate level including data manipulation and web scraping.",
+    requirements: ["Basic computer literacy", "Own laptop preferred"],
+    duration: "8 weeks",
+    posted: "May 9, 2026",
+    contact: "info@camtechacademy.cm"
+  },
+  {
+    id: 7,
+    title: "Business Development Officer",
+    organization: "Afriland First Bank",
+    orgShort: "AB",
+    type: "job",
+    region: "Centre",
+    city: "Yaoundé",
+    sector: "business",
+    salary: "180,000 XAF/mo",
+    deadline: "June 10, 2026",
+    description: "Support business development activities, identify new clients, and help maintain relationships with existing corporate partners. Experience in banking a plus.",
+    requirements: ["Commerce or Finance degree", "2+ years experience", "French & English"],
+    duration: "Full-time",
+    posted: "May 6, 2026",
+    contact: "rh@afrilandfirstbank.com"
+  },
+  {
+    id: 8,
+    title: "Women in STEM Scholarship",
+    organization: "UNESCO Cameroon",
+    orgShort: "UN",
+    type: "grant",
+    region: "National",
+    city: "All Regions",
+    sector: "education",
+    salary: "500,000 XAF",
+    deadline: "June 30, 2026",
+    description: "Scholarship for young women pursuing STEM studies in Cameroonian universities. Covers tuition and a monthly living stipend for one academic year.",
+    requirements: ["Female applicants only", "Enrolled in STEM programme", "Age 18–28", "Academic transcript required"],
+    duration: "1 academic year",
+    posted: "May 3, 2026",
+    contact: "stem@unesco-cameroon.org"
+  }
+];
+
+const REGIONS = [
+  { name: "Centre",     count: 142, lat: 3.867,  lng: 11.517 },
+  { name: "Littoral",   count: 218, lat: 4.061,  lng: 9.777  },
+  { name: "West",       count: 67,  lat: 5.479,  lng: 10.418 },
+  { name: "North West", count: 54,  lat: 6.0,    lng: 10.15  },
+  { name: "South West", count: 48,  lat: 4.157,  lng: 9.240  },
+  { name: "Adamaoua",   count: 31,  lat: 7.329,  lng: 13.577 },
+  { name: "North",      count: 28,  lat: 9.3,    lng: 13.4   },
+  { name: "Far North",  count: 19,  lat: 10.9,   lng: 14.3   },
+  { name: "South",      count: 23,  lat: 2.9,    lng: 11.5   },
+  { name: "East",       count: 17,  lat: 4.5,    lng: 13.8   }
+];
+
+const SECTORS = [
+  { name: "Technology",  icon: "💻", color: "#E1F5EE", count: 234 },
+  { name: "Business",    icon: "🏢", color: "#EBF2FF", count: 187 },
+  { name: "Agriculture", icon: "🌿", color: "#EAF3DE", count: 156 },
+  { name: "Health",      icon: "❤️", color: "#FEF0F0", count: 98  },
+  { name: "Education",   icon: "📚", color: "#FFF8E1", count: 143 },
+  { name: "Finance",     icon: "💰", color: "#F3E5F5", count: 72  }
+];
