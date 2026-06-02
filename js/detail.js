@@ -3,46 +3,45 @@
 // ═══════════════════════════════════════
 
 function getTagClass(type) {
-  var map = {
-    job:        'tag-job',
-    training:   'tag-training',
-    internship: 'tag-internship',
-    grant:      'tag-grant'
-  };
+  var map = { job:'tag-job', training:'tag-training', internship:'tag-internship', grant:'tag-grant' };
   return map[type] || 'tag-job';
 }
 
-function capitalise(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
+function capitalise(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
 
 function getTagBg(type) {
-  var map = {
-    job:        '#E1F5EE',
-    training:   '#EBF2FF',
-    internship: '#FFF3E0',
-    grant:      '#FEF0F0'
-  };
+  var map = { job:'#E1F5EE', training:'#EBF2FF', internship:'#FFF3E0', grant:'#FEF0F0' };
   return map[type] || '#E1F5EE';
 }
 
 function getTagColor(type) {
-  var map = {
-    job:        '#085041',
-    training:   '#1a4a8a',
-    internship: '#7a4100',
-    grant:      '#8a1a1a'
-  };
+  var map = { job:'#085041', training:'#1a4a8a', internship:'#7a4100', grant:'#8a1a1a' };
   return map[type] || '#085041';
 }
 
-// ─── Get opportunity ID from URL ────────
 function getIdFromURL() {
   var params = new URLSearchParams(window.location.search);
   return parseInt(params.get('id'));
 }
 
-// ─── Render not found state ─────────────
+function getSaved() {
+  var s = localStorage.getItem('opportunet_saved');
+  return s ? JSON.parse(s) : [];
+}
+
+function isSaved(id) {
+  return getSaved().indexOf(id) !== -1;
+}
+
+function toggleSave(id) {
+  var saved = getSaved();
+  var idx   = saved.indexOf(id);
+  if (idx === -1) { saved.push(id); }
+  else            { saved.splice(idx, 1); }
+  localStorage.setItem('opportunet_saved', JSON.stringify(saved));
+  return saved.indexOf(id) !== -1;
+}
+
 function renderNotFound() {
   document.getElementById('detail-content').innerHTML =
     '<div class="not-found">' +
@@ -56,14 +55,15 @@ function renderNotFound() {
     '</div>';
 }
 
-// ─── Render related opportunities ───────
 function renderRelated(currentOpp) {
   var related = OPPORTUNITIES.filter(function(o) {
     return o.id !== currentOpp.id &&
       (o.type === currentOpp.type || o.sector === currentOpp.sector);
   }).slice(0, 3);
 
-  if (related.length === 0) return '<p style="font-size:13px;color:#888;">No related opportunities found.</p>';
+  if (related.length === 0) {
+    return '<p style="font-size:13px;color:#888;">No related opportunities found.</p>';
+  }
 
   return related.map(function(opp) {
     return (
@@ -71,28 +71,24 @@ function renderRelated(currentOpp) {
         '<div class="related-logo">' + opp.orgShort + '</div>' +
         '<div>' +
           '<div class="related-title">' + opp.title + '</div>' +
-          '<div class="related-org">'   + opp.organization + ' · ' + opp.city + '</div>' +
+          '<div class="related-org">' + opp.organization + ' · ' + opp.city + '</div>' +
         '</div>' +
       '</div>'
     );
   }).join('');
 }
 
-// ─── Main render ────────────────────────
 function renderDetail() {
   var id  = getIdFromURL();
   var opp = OPPORTUNITIES.find(function(o) { return o.id === id; });
 
-  if (!opp) {
-    renderNotFound();
-    return;
-  }
+  if (!opp) { renderNotFound(); return; }
 
-  // Update page title
   document.title = opp.title + ' — OpportuNet Cameroon';
 
   var tagBg    = getTagBg(opp.type);
   var tagColor = getTagColor(opp.type);
+  var saved    = isSaved(id);
 
   var requirementsHTML = opp.requirements.map(function(req) {
     return (
@@ -105,21 +101,14 @@ function renderDetail() {
 
   var html =
     '<div class="detail-layout">' +
-
-      // ── Main column ──
       '<div>' +
-        '<button class="back-btn" onclick="history.back()">' +
-          '← Back to opportunities' +
-        '</button>' +
-
+        '<button class="back-btn" onclick="history.back()">← Back to opportunities</button>' +
         '<div class="detail-card">' +
-
-          // Header
           '<div class="detail-card-header">' +
             '<div class="detail-org-row">' +
               '<div class="detail-org-logo">' + opp.orgShort + '</div>' +
               '<div>' +
-                '<div class="detail-org-name">'     + opp.organization + '</div>' +
+                '<div class="detail-org-name">' + opp.organization + '</div>' +
                 '<div class="detail-org-location">📍 ' + opp.city + ', ' + opp.region + '</div>' +
               '</div>' +
             '</div>' +
@@ -131,46 +120,34 @@ function renderDetail() {
               '<span class="detail-tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">' +
                 capitalise(opp.sector) +
               '</span>' +
-              '<span class="detail-tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">' +
-                '⏱ ' + opp.duration +
+              '<span class="detail-tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">⏱ ' +
+                opp.duration +
               '</span>' +
             '</div>' +
           '</div>' +
-
-          // Body
           '<div class="detail-card-body">' +
-
             '<div class="detail-section">' +
               '<div class="detail-section-title">About this opportunity</div>' +
               '<p class="detail-section-text">' + opp.description + '</p>' +
             '</div>' +
-
             '<div class="detail-section">' +
               '<div class="detail-section-title">Requirements</div>' +
               '<div class="detail-requirements">' + requirementsHTML + '</div>' +
             '</div>' +
-
             '<div class="detail-section">' +
               '<div class="detail-section-title">How to apply</div>' +
               '<p class="detail-section-text">' +
-                'Send your application to ' +
-                '<a href="mailto:' + opp.contact + '" ' +
-                   'style="color:var(--green-700);font-weight:500;">' +
-                  opp.contact +
-                '</a>. ' +
+                'Send your application to <strong>' + opp.contact + '</strong>. ' +
                 'Include your CV, a motivation letter, and any relevant certificates. ' +
-                'Make sure to apply before the deadline: <strong>' + opp.deadline + '</strong>.' +
+                'Apply before: <strong>' + opp.deadline + '</strong>.' +
               '</p>' +
             '</div>' +
-
           '</div>' +
         '</div>' +
       '</div>' +
 
-      // ── Sidebar ──
       '<div class="detail-sidebar">' +
 
-        // Apply card
         '<div class="sidebar-card">' +
           '<div class="salary-display">' +
             '<div class="salary-amount">' + opp.salary + '</div>' +
@@ -184,17 +161,14 @@ function renderDetail() {
             '</div>' +
           '</div>' +
           '<br/>' +
-          '<button class="btn-apply-full" ' +
-            'onclick="window.location.href=\'mailto:' + opp.contact + '\'">' +
+          '<button class="btn-apply-full" onclick="applyNow(\'' + opp.contact + '\')">' +
             'Apply Now →' +
           '</button>' +
-          '<button class="btn-bookmark-full" id="bookmark-btn" ' +
-            'onclick="toggleBookmark()">' +
-            '♡ &nbsp;Save Opportunity' +
+          '<button class="btn-bookmark-full" id="bookmark-btn" onclick="handleSave(' + id + ')">' +
+            (saved ? '♥ &nbsp;Saved!' : '♡ &nbsp;Save Opportunity') +
           '</button>' +
         '</div>' +
 
-        // Quick info card
         '<div class="sidebar-card">' +
           '<div class="sidebar-card-title">Quick Info</div>' +
           '<div class="detail-meta-list">' +
@@ -225,28 +199,73 @@ function renderDetail() {
           '</div>' +
         '</div>' +
 
-        // Related card
+        '<div class="sidebar-card">' +
+          '<div class="sidebar-card-title">How to Apply</div>' +
+          '<p style="font-size:13px;color:#555;line-height:1.7;margin-bottom:14px;">' +
+            'Send your CV and motivation letter to the contact below. ' +
+            'Mention OpportuNet Cameroon in your subject line.' +
+          '</p>' +
+          '<div style="background:var(--green-50);border:1px solid var(--green-200);' +
+               'border-radius:8px;padding:12px;font-size:13px;color:var(--green-800);' +
+               'word-break:break-all;">' +
+            '📧 ' + opp.contact +
+          '</div>' +
+          '<button onclick="copyEmail(\'' + opp.contact + '\')" id="copy-btn" ' +
+            'style="width:100%;margin-top:10px;background:transparent;color:var(--green-700);' +
+            'border:1px solid var(--green-200);padding:9px;border-radius:8px;font-size:13px;' +
+            'font-weight:500;cursor:pointer;font-family:var(--font-body);">' +
+            '📋 Copy Email Address' +
+          '</button>' +
+        '</div>' +
+
         '<div class="sidebar-card">' +
           '<div class="sidebar-card-title">Related Opportunities</div>' +
           renderRelated(opp) +
         '</div>' +
 
       '</div>' +
-
     '</div>';
 
   document.getElementById('detail-content').innerHTML = html;
 }
 
-// ─── Bookmark toggle ────────────────────
-window.toggleBookmark = function() {
-  var btn   = document.getElementById('bookmark-btn');
-  var saved = btn.dataset.saved === 'true';
-  btn.dataset.saved  = !saved;
-  btn.innerHTML      = saved ? '♡ &nbsp;Save Opportunity' : '♥ &nbsp;Saved!';
-  btn.style.background = saved ? '' : 'var(--green-50)';
-  btn.style.color      = saved ? '' : 'var(--green-700)';
+window.applyNow = function(email) {
+  copyEmail(email);
+  var btn = document.querySelector('.btn-apply-full');
+  if (btn) {
+    btn.textContent      = '✓ Email Copied! Send your application';
+    btn.style.background = 'var(--green-600)';
+    setTimeout(function() {
+      btn.textContent      = 'Apply Now →';
+      btn.style.background = '';
+    }, 3000);
+  }
 };
 
-// ─── Init ───────────────────────────────
+window.copyEmail = function(email) {
+  navigator.clipboard.writeText(email).catch(function() {
+    var el = document.createElement('textarea');
+    el.value = email;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  });
+  var btn = document.getElementById('copy-btn');
+  if (btn) {
+    btn.textContent = '✓ Copied!';
+    setTimeout(function() { btn.textContent = '📋 Copy Email Address'; }, 2000);
+  }
+};
+
+window.handleSave = function(id) {
+  var nowSaved = toggleSave(id);
+  var btn = document.getElementById('bookmark-btn');
+  if (btn) {
+    btn.innerHTML        = nowSaved ? '♥ &nbsp;Saved!' : '♡ &nbsp;Save Opportunity';
+    btn.style.background = nowSaved ? 'var(--green-50)' : '';
+    btn.style.color      = nowSaved ? 'var(--green-700)' : '';
+  }
+};
+
 renderDetail();

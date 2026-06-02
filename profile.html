@@ -47,7 +47,7 @@
     .skill-add-row { display:flex; gap:8px; }
     .skill-input { flex:1; padding:9px 14px; border:1px solid var(--gray-200); border-radius:var(--radius-md); font-size:13px; font-family:var(--font-body); }
     .skill-input:focus { outline:none; border-color:var(--green-400); }
-    .skill-add-btn { background:var(--green-700); color:var(--white); border:none; padding:9px 18px; border-radius:var(--radius-md); font-size:13px; font-weight:500; cursor:pointer; transition:var(--transition); }
+    .skill-add-btn { background:var(--green-700); color:var(--white); border:none; padding:9px 18px; border-radius:var(--radius-md); font-size:13px; font-weight:500; cursor:pointer; }
     .skill-add-btn:hover { background:var(--green-600); }
     .edu-item,.exp-item { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--gray-200); }
     .edu-item:last-child,.exp-item:last-child { border-bottom:none; }
@@ -77,7 +77,11 @@
     .cv-print-btn:hover { background:var(--dark-700); }
     .p-alert { padding:10px 14px; border-radius:var(--radius-md); font-size:13px; margin-bottom:14px; background:var(--green-50); color:var(--green-800); border:1px solid var(--green-200); display:none; }
     .p-alert.visible { display:block; }
-    .loading { text-align:center; padding:40px; color:#888; font-size:14px; }
+    .saved-item { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--gray-200); cursor:pointer; transition:var(--transition); }
+    .saved-item:last-child { border-bottom:none; }
+    .saved-item:hover { background:var(--gray-100); padding-left:8px; border-radius:var(--radius-md); }
+    .saved-item-title { font-family:var(--font-display); font-size:14px; font-weight:600; color:var(--dark-900); }
+    .saved-item-sub { font-size:12px; color:#888; margin-top:2px; }
     @media (max-width:768px) { .profile-layout { grid-template-columns:1fr; } .profile-sidebar { position:static; } .p-row { grid-template-columns:1fr; } .cv-header { flex-direction:column; text-align:center; } }
   </style>
 </head>
@@ -117,13 +121,16 @@
           <div class="profile-nav-item" onclick="showProfilePanel('experience')"><span>💼</span> Experience</div>
           <div class="profile-nav-item" onclick="showProfilePanel('cv')"><span>📄</span> My CV</div>
           <div class="profile-nav-item" onclick="showProfilePanel('saved')"><span>🔖</span> Saved</div>
-          <div class="profile-nav-item" style="margin-top:8px;border-top:1px solid var(--gray-200);padding-top:10px;"
+          <div class="profile-nav-item"
+               style="margin-top:8px;border-top:1px solid var(--gray-200);padding-top:10px;"
                onclick="doLogout()"><span>🚪</span> Logout</div>
         </div>
       </div>
       <div class="profile-completion">
         <div class="completion-title">Profile Completion</div>
-        <div class="completion-bar"><div class="completion-fill" id="completion-fill" style="width:0%"></div></div>
+        <div class="completion-bar">
+          <div class="completion-fill" id="completion-fill" style="width:0%"></div>
+        </div>
         <div class="completion-label" id="completion-label">0% complete</div>
       </div>
     </aside>
@@ -219,16 +226,14 @@
       <div class="profile-panel" id="pp-saved">
         <div class="p-card">
           <div class="p-card-header"><div class="p-card-title">Saved Opportunities</div></div>
-          <div style="text-align:center;padding:40px 20px;color:#aaa;">
-            <div style="font-size:36px;margin-bottom:10px;">🔖</div>
-            <p style="font-size:13px;">No saved opportunities yet.<br>Click the ♡ on any listing to save it here.</p>
-          </div>
+          <div id="saved-list"></div>
         </div>
       </div>
 
     </main>
   </div>
 
+  <script src="js/data.js"></script>
   <script type="module">
     import { FirebaseAuth, updateNavbar } from './js/firebase.js';
 
@@ -259,10 +264,11 @@
       document.querySelectorAll('.profile-panel').forEach(function(p) { p.classList.remove('active'); });
       document.querySelectorAll('.profile-nav-item').forEach(function(n) { n.classList.remove('active'); });
       document.getElementById('pp-' + name).classList.add('active');
-      var navMap = { 'overview':0, 'skills':1, 'education':2, 'experience':3, 'cv':4, 'saved':5 };
+      var navMap = { 'overview':0,'skills':1,'education':2,'experience':3,'cv':4,'saved':5 };
       var items  = document.querySelectorAll('.profile-nav-item');
       if (items[navMap[name]] !== undefined) items[navMap[name]].classList.add('active');
-      if (name === 'cv') renderCV();
+      if (name === 'cv')    renderCV();
+      if (name === 'saved') renderSaved();
     };
 
     function updateCompletion() {
@@ -345,16 +351,22 @@
     function renderEducation() {
       var list = document.getElementById('edu-list');
       var edu  = currentUser.education || [];
-      if (edu.length === 0) { list.innerHTML = '<p style="font-size:13px;color:#aaa;margin-bottom:12px;">No education added yet.</p>'; return; }
+      if (edu.length === 0) {
+        list.innerHTML = '<p style="font-size:13px;color:#aaa;margin-bottom:12px;">No education added yet.</p>';
+        return;
+      }
       list.innerHTML = edu.map(function(e, i) {
-        return '<div class="edu-item"><div class="edu-icon">🎓</div><div style="flex:1;"><div class="edu-title">' + e.degree + '</div>' +
+        return '<div class="edu-item"><div class="edu-icon">🎓</div>' +
+          '<div style="flex:1;"><div class="edu-title">' + e.degree + '</div>' +
           '<div class="edu-sub">' + e.school + ' · ' + e.year + '</div>' +
           (e.grade ? '<div class="edu-sub">' + e.grade + '</div>' : '') + '</div>' +
           '<button class="edu-delete" onclick="deleteEducation(' + i + ')">🗑</button></div>';
       }).join('');
     }
 
-    window.toggleEduForm = function() { document.getElementById('edu-form').classList.toggle('visible'); };
+    window.toggleEduForm = function() {
+      document.getElementById('edu-form').classList.toggle('visible');
+    };
 
     window.addEducation = async function() {
       var school = document.getElementById('edu-school').value.trim();
@@ -363,7 +375,7 @@
       var grade  = document.getElementById('edu-grade').value.trim();
       if (!school || !degree) { showAlert('edu-alert', 'Please fill in institution and degree.', true); return; }
       var edu = (currentUser.education || []).slice();
-      edu.push({ school, degree, year, grade });
+      edu.push({ school: school, degree: degree, year: year, grade: grade });
       var result = await FirebaseAuth.updateUser({ education: edu });
       if (result.success) {
         currentUser = result.user;
@@ -390,9 +402,13 @@
     function renderExperience() {
       var list = document.getElementById('exp-list');
       var exp  = currentUser.experience || [];
-      if (exp.length === 0) { list.innerHTML = '<p style="font-size:13px;color:#aaa;margin-bottom:12px;">No experience added yet.</p>'; return; }
+      if (exp.length === 0) {
+        list.innerHTML = '<p style="font-size:13px;color:#aaa;margin-bottom:12px;">No experience added yet.</p>';
+        return;
+      }
       list.innerHTML = exp.map(function(e, i) {
-        return '<div class="exp-item"><div class="exp-icon">💼</div><div style="flex:1;"><div class="exp-title">' + e.title + '</div>' +
+        return '<div class="exp-item"><div class="exp-icon">💼</div>' +
+          '<div style="flex:1;"><div class="exp-title">' + e.title + '</div>' +
           '<div class="exp-sub">' + e.company + ' · ' + (e.location || '') + '</div>' +
           '<div class="exp-sub">' + (e.period || '') + '</div>' +
           (e.desc ? '<div style="font-size:12px;color:#555;margin-top:4px;line-height:1.6;">' + e.desc + '</div>' : '') +
@@ -400,7 +416,9 @@
       }).join('');
     }
 
-    window.toggleExpForm = function() { document.getElementById('exp-form').classList.toggle('visible'); };
+    window.toggleExpForm = function() {
+      document.getElementById('exp-form').classList.toggle('visible');
+    };
 
     window.addExperience = async function() {
       var title    = document.getElementById('exp-title').value.trim();
@@ -410,7 +428,7 @@
       var desc     = document.getElementById('exp-desc').value.trim();
       if (!title || !company) { showAlert('exp-alert', 'Please fill in job title and company.', true); return; }
       var exp = (currentUser.experience || []).slice();
-      exp.push({ title, company, period, location, desc });
+      exp.push({ title: title, company: company, period: period, location: location, desc: desc });
       var result = await FirebaseAuth.updateUser({ experience: exp });
       if (result.success) {
         currentUser = result.user;
@@ -433,55 +451,123 @@
       if (result.success) { currentUser = result.user; renderExperience(); updateCompletion(); }
     };
 
+    // ─── Saved opportunities ──────────────
+    function renderSaved() {
+      var list     = document.getElementById('saved-list');
+      var savedIds = localStorage.getItem('opportunet_saved');
+      savedIds     = savedIds ? JSON.parse(savedIds) : [];
+
+      if (savedIds.length === 0) {
+        list.innerHTML =
+          '<div style="text-align:center;padding:40px 20px;color:#aaa;">' +
+            '<div style="font-size:36px;margin-bottom:10px;">🔖</div>' +
+            '<p style="font-size:13px;">No saved opportunities yet.<br>' +
+            'Click the ♡ on any listing to save it here.</p>' +
+          '</div>';
+        return;
+      }
+
+      var saved = OPPORTUNITIES.filter(function(o) {
+        return savedIds.indexOf(o.id) !== -1;
+      });
+
+      if (saved.length === 0) {
+        list.innerHTML =
+          '<div style="text-align:center;padding:40px 20px;color:#aaa;">' +
+            '<div style="font-size:36px;margin-bottom:10px;">🔖</div>' +
+            '<p style="font-size:13px;">No saved opportunities yet.</p>' +
+          '</div>';
+        return;
+      }
+
+      list.innerHTML = saved.map(function(opp) {
+        return (
+          '<div class="saved-item" onclick="window.location.href=\'detail.html?id=' + opp.id + '\'">' +
+            '<div>' +
+              '<div class="saved-item-title">' + opp.title + '</div>' +
+              '<div class="saved-item-sub">' +
+                opp.organization + ' · ' + opp.city + ' · ' + opp.deadline +
+              '</div>' +
+            '</div>' +
+            '<span style="font-size:18px;color:var(--green-700);">→</span>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    // ─── CV ───────────────────────────────
     function renderCV() {
       var user = FirebaseAuth.getCurrentUser();
       var cv   = document.getElementById('cv-preview');
       if (!cv || !user) return;
 
       var skillsHTML = (user.skills && user.skills.length > 0)
-        ? '<div class="cv-skills-wrap">' + user.skills.map(function(s) { return '<span class="cv-skill">' + s + '</span>'; }).join('') + '</div>'
+        ? '<div class="cv-skills-wrap">' +
+            user.skills.map(function(s) {
+              return '<span class="cv-skill">' + s + '</span>';
+            }).join('') +
+          '</div>'
         : '<p style="font-size:13px;color:#aaa;">No skills added yet.</p>';
 
       var eduHTML = (user.education && user.education.length > 0)
         ? user.education.map(function(e) {
-            return '<div class="cv-edu-item"><div class="cv-edu-title">' + e.degree + '</div>' +
-              '<div class="cv-edu-sub">' + e.school + (e.year ? ' · ' + e.year : '') + (e.grade ? ' · ' + e.grade : '') + '</div></div>';
+            return '<div class="cv-edu-item">' +
+              '<div class="cv-edu-title">' + e.degree + '</div>' +
+              '<div class="cv-edu-sub">' + e.school +
+                (e.year  ? ' · ' + e.year  : '') +
+                (e.grade ? ' · ' + e.grade : '') +
+              '</div></div>';
           }).join('')
         : '<p style="font-size:13px;color:#aaa;">No education added yet.</p>';
 
       var expHTML = (user.experience && user.experience.length > 0)
         ? user.experience.map(function(e) {
-            return '<div class="cv-edu-item"><div class="cv-edu-title">' + e.title + ' — ' + e.company + '</div>' +
-              '<div class="cv-edu-sub">' + (e.period ? e.period + ' · ' : '') + (e.location || '') + '</div>' +
-              (e.desc ? '<div style="font-size:13px;color:#555;margin-top:4px;line-height:1.65;">' + e.desc + '</div>' : '') + '</div>';
+            return '<div class="cv-edu-item">' +
+              '<div class="cv-edu-title">' + e.title + ' — ' + e.company + '</div>' +
+              '<div class="cv-edu-sub">' +
+                (e.period   ? e.period + ' · '   : '') +
+                (e.location ? e.location : '') +
+              '</div>' +
+              (e.desc
+                ? '<div style="font-size:13px;color:#555;margin-top:4px;line-height:1.65;">' +
+                    e.desc + '</div>'
+                : '') +
+            '</div>';
           }).join('')
         : '<p style="font-size:13px;color:#aaa;">No experience added yet.</p>';
 
       cv.innerHTML =
         '<div class="cv-header">' +
           '<div class="cv-avatar">' + user.name.charAt(0).toUpperCase() + '</div>' +
-          '<div><div class="cv-name">' + user.name + '</div>' +
-          '<div class="cv-contact">' + user.email +
-            (user.phone  ? ' · ' + user.phone  : '') +
-            (user.region ? ' · ' + user.region : '') +
-          '</div></div>' +
+          '<div>' +
+            '<div class="cv-name">' + user.name + '</div>' +
+            '<div class="cv-contact">' + user.email +
+              (user.phone  ? ' · ' + user.phone  : '') +
+              (user.region ? ' · ' + user.region : '') +
+            '</div>' +
+          '</div>' +
         '</div>' +
-        (user.bio ? '<div class="cv-section"><div class="cv-section-title">Profile</div><div class="cv-bio">' + user.bio + '</div></div>' : '') +
-        '<div class="cv-section"><div class="cv-section-title">Skills</div>'      + skillsHTML + '</div>' +
-        '<div class="cv-section"><div class="cv-section-title">Education</div>'   + eduHTML    + '</div>' +
-        '<div class="cv-section"><div class="cv-section-title">Experience</div>'  + expHTML    + '</div>';
+        (user.bio
+          ? '<div class="cv-section"><div class="cv-section-title">Profile</div>' +
+            '<div class="cv-bio">' + user.bio + '</div></div>'
+          : '') +
+        '<div class="cv-section"><div class="cv-section-title">Skills</div>'     + skillsHTML + '</div>' +
+        '<div class="cv-section"><div class="cv-section-title">Education</div>'  + eduHTML    + '</div>' +
+        '<div class="cv-section"><div class="cv-section-title">Experience</div>' + expHTML    + '</div>';
     }
 
+    // ─── Alert helper ─────────────────────
     function showAlert(id, message, isError) {
       var el = document.getElementById(id);
       if (!el) return;
-      el.textContent = message;
-      el.className   = 'p-alert visible';
+      el.textContent       = message;
+      el.className         = 'p-alert visible';
       el.style.background  = isError ? '#FEF0F0' : '';
       el.style.color       = isError ? '#8a1a1a' : '';
       el.style.borderColor = isError ? '#f5c6c6' : '';
       setTimeout(function() { el.classList.remove('visible'); }, 2500);
     }
   </script>
+
 </body>
 </html>
