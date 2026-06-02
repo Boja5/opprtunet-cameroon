@@ -1,6 +1,5 @@
 // ═══════════════════════════════════════
 // OpportuNet Cameroon — Central Data Store
-// All opportunity data lives here.
 // ═══════════════════════════════════════
 
 const OPPORTUNITIES = [
@@ -19,7 +18,8 @@ const OPPORTUNITIES = [
     requirements: ["HTML/CSS proficiency", "Basic JavaScript", "Team player", "HND or equivalent"],
     duration: "Full-time",
     posted: "May 10, 2026",
-    contact: "jobs@techhubyaounde.cm"
+    contact: "jobs@techhubyaounde.cm",
+    companyId: "c1"
   },
   {
     id: 2,
@@ -36,7 +36,8 @@ const OPPORTUNITIES = [
     requirements: ["Age 18–35", "Basic computer skills", "Motivation letter"],
     duration: "6 weeks",
     posted: "May 5, 2026",
-    contact: "training@giz-cameroon.org"
+    contact: "training@giz-cameroon.org",
+    companyId: "c2"
   },
   {
     id: 3,
@@ -53,7 +54,8 @@ const OPPORTUNITIES = [
     requirements: ["Computer Science student", "Python or Java basics", "Currently enrolled in university"],
     duration: "3 months",
     posted: "May 8, 2026",
-    contact: "internships@orange.cm"
+    contact: "internships@orange.cm",
+    companyId: "c3"
   },
   {
     id: 4,
@@ -70,7 +72,8 @@ const OPPORTUNITIES = [
     requirements: ["Age 18–35", "Registered business or project plan", "Cameroonian national"],
     duration: "N/A",
     posted: "May 1, 2026",
-    contact: "grants@minyouth.cm"
+    contact: "grants@minyouth.cm",
+    companyId: "c4"
   },
   {
     id: 5,
@@ -87,7 +90,8 @@ const OPPORTUNITIES = [
     requirements: ["Excel/Google Sheets proficiency", "Statistics background", "French required", "English a plus"],
     duration: "12 months",
     posted: "May 12, 2026",
-    contact: "hr@msf-cameroon.org"
+    contact: "hr@msf-cameroon.org",
+    companyId: "c5"
   },
   {
     id: 6,
@@ -104,7 +108,8 @@ const OPPORTUNITIES = [
     requirements: ["Basic computer literacy", "Own laptop preferred"],
     duration: "8 weeks",
     posted: "May 9, 2026",
-    contact: "info@camtechacademy.cm"
+    contact: "info@camtechacademy.cm",
+    companyId: "c6"
   },
   {
     id: 7,
@@ -121,7 +126,8 @@ const OPPORTUNITIES = [
     requirements: ["Commerce or Finance degree", "2+ years experience", "French & English"],
     duration: "Full-time",
     posted: "May 6, 2026",
-    contact: "rh@afrilandfirstbank.com"
+    contact: "rh@afrilandfirstbank.com",
+    companyId: "c7"
   },
   {
     id: 8,
@@ -138,10 +144,363 @@ const OPPORTUNITIES = [
     requirements: ["Female applicants only", "Enrolled in STEM programme", "Age 18–28", "Academic transcript required"],
     duration: "1 academic year",
     posted: "May 3, 2026",
-    contact: "stem@unesco-cameroon.org"
+    contact: "stem@unesco-cameroon.org",
+    companyId: "c8"
+  },
+  {
+    id: 9,
+    title: "Mobile App Developer",
+    organization: "Maviance PLC",
+    orgShort: "MV",
+    type: "job",
+    region: "Littoral",
+    city: "Douala",
+    sector: "technology",
+    salary: "250,000 XAF/mo",
+    deadline: "June 25, 2026",
+    description: "We are looking for a skilled mobile app developer to build and maintain Android and iOS applications. Experience with Flutter or React Native is required.",
+    requirements: ["Flutter or React Native experience", "2+ years mobile development", "Portfolio required"],
+    duration: "Full-time",
+    posted: "May 14, 2026",
+    contact: "careers@maviance.com",
+    companyId: "c9"
+  },
+  {
+    id: 10,
+    title: "Graphic Design Internship",
+    organization: "Canal+ Cameroun",
+    orgShort: "CP",
+    type: "internship",
+    region: "Centre",
+    city: "Yaoundé",
+    sector: "arts",
+    salary: "60,000 XAF/mo",
+    deadline: "June 12, 2026",
+    description: "Join our creative team for a 4-month internship. You will design marketing materials, social media content, and assist with video production projects.",
+    requirements: ["Adobe Creative Suite", "Portfolio of design work", "Currently studying design or related field"],
+    duration: "4 months",
+    posted: "May 11, 2026",
+    contact: "hr@canalplus-cameroun.cm",
+    companyId: "c10"
+  },
+  {
+    id: 11,
+    title: "Entrepreneurship Training Program",
+    organization: "Enabel Cameroon",
+    orgShort: "EN",
+    type: "training",
+    region: "North West",
+    city: "Bamenda",
+    sector: "business",
+    salary: "Free",
+    deadline: "June 8, 2026",
+    description: "10-day intensive entrepreneurship training for youth in the North West region. Covers business planning, financial management, marketing and access to funding.",
+    requirements: ["Age 18–40", "Business idea or existing small business", "Resident of North West region"],
+    duration: "10 days",
+    posted: "May 7, 2026",
+    contact: "info@enabel-cameroon.org",
+    companyId: "c11"
+  },
+  {
+    id: 12,
+    title: "Agricultural Extension Officer",
+    organization: "MINADER",
+    orgShort: "MN",
+    type: "job",
+    region: "South West",
+    city: "Buea",
+    sector: "agriculture",
+    salary: "95,000 XAF/mo",
+    deadline: "July 5, 2026",
+    description: "Support farmers in the South West region with modern agricultural techniques, crop management and access to markets. Field work required.",
+    requirements: ["Agronomy or related degree", "Motorcycle licence", "Fluent in English and Pidgin"],
+    duration: "Full-time",
+    posted: "May 15, 2026",
+    contact: "recrutement@minader.cm",
+    companyId: "c12"
   }
 ];
 
+// ── Company profiles (publicly visible) ─────────────────────────
+const COMPANIES = [
+  {
+    id: "c1",
+    name: "TechHub Yaoundé",
+    short: "TH",
+    type: "Startup",
+    region: "Centre",
+    city: "Yaoundé",
+    sector: "Technology",
+    description: "TechHub Yaoundé is Cameroon's leading technology incubator and co-working space. We support young tech entrepreneurs and connect skilled developers with top employers across the country.",
+    website: "www.techhubyaounde.cm",
+    email: "info@techhubyaounde.cm",
+    founded: "2018",
+    employees: "12–50",
+    listings: [1]
+  },
+  {
+    id: "c2",
+    name: "GIZ Cameroon",
+    short: "GZ",
+    type: "International Organization",
+    region: "Littoral",
+    city: "Douala",
+    sector: "Development",
+    description: "GIZ (Deutsche Gesellschaft für Internationale Zusammenarbeit) implements sustainable development projects in Cameroon. Our programmes focus on youth employment, vocational training, and economic development.",
+    website: "www.giz.de/cameroon",
+    email: "info@giz-cameroon.org",
+    founded: "1975",
+    employees: "200+",
+    listings: [2]
+  },
+  {
+    id: "c3",
+    name: "Orange Cameroun",
+    short: "OC",
+    type: "Private Company",
+    region: "Littoral",
+    city: "Douala",
+    sector: "Telecommunications",
+    description: "Orange Cameroun is one of the leading telecommunications operators in Cameroon, providing mobile, internet and financial services to millions of customers across all 10 regions.",
+    website: "www.orange.cm",
+    email: "careers@orange.cm",
+    founded: "1999",
+    employees: "1000+",
+    listings: [3]
+  },
+  {
+    id: "c4",
+    name: "Ministry of Youth Affairs",
+    short: "MY",
+    type: "Government Ministry",
+    region: "National",
+    city: "Yaoundé",
+    sector: "Government",
+    description: "The Ministry of Youth Affairs and Civic Education of Cameroon is responsible for youth policy, employment programmes, and civic engagement initiatives across all 10 regions of the country.",
+    website: "www.minjec.cm",
+    email: "contact@minjec.cm",
+    founded: "1960",
+    employees: "500+",
+    listings: [4]
+  },
+  {
+    id: "c5",
+    name: "MSF Cameroon",
+    short: "MS",
+    type: "NGO / Non-profit",
+    region: "Adamaoua",
+    city: "Ngaoundéré",
+    sector: "Health",
+    description: "Médecins Sans Frontières (MSF) provides medical humanitarian assistance to people affected by conflict, epidemics, disasters, or excluded from healthcare in Cameroon and across Africa.",
+    website: "www.msf.org",
+    email: "info@msf-cameroon.org",
+    founded: "1971",
+    employees: "300+",
+    listings: [5]
+  },
+  {
+    id: "c6",
+    name: "Cameroon Tech Academy",
+    short: "CA",
+    type: "University / School",
+    region: "West",
+    city: "Bafoussam",
+    sector: "Education",
+    description: "Cameroon Tech Academy provides world-class technology education to youth across Cameroon. Our bootcamps and short courses are designed to make young Cameroonians job-ready in the digital economy.",
+    website: "www.camtechacademy.cm",
+    email: "info@camtechacademy.cm",
+    founded: "2020",
+    employees: "12–50",
+    listings: [6]
+  },
+  {
+    id: "c7",
+    name: "Afriland First Bank",
+    short: "AB",
+    type: "Private Company",
+    region: "Centre",
+    city: "Yaoundé",
+    sector: "Finance",
+    description: "Afriland First Bank is one of the leading financial institutions in Cameroon, offering a full range of banking services to individuals, businesses and institutions across Central Africa.",
+    website: "www.afrilandfirstbank.com",
+    email: "rh@afrilandfirstbank.com",
+    founded: "1987",
+    employees: "500+",
+    listings: [7]
+  },
+  {
+    id: "c8",
+    name: "UNESCO Cameroon",
+    short: "UN",
+    type: "International Organization",
+    region: "National",
+    city: "Yaoundé",
+    sector: "Education",
+    description: "UNESCO's office in Cameroon promotes education, science, culture and communication. We run scholarship programmes, literacy initiatives, and cultural heritage projects across the country.",
+    website: "www.unesco.org/cameroon",
+    email: "unesco-yaounde@unesco.org",
+    founded: "1945",
+    employees: "50+",
+    listings: [8]
+  },
+  {
+    id: "c9",
+    name: "Maviance PLC",
+    short: "MV",
+    type: "Startup",
+    region: "Littoral",
+    city: "Douala",
+    sector: "Technology",
+    description: "Maviance is a leading fintech company in Cameroon building digital payment infrastructure for businesses and consumers. Our flagship product Smobilpay powers payments across Central Africa.",
+    website: "www.maviance.com",
+    email: "careers@maviance.com",
+    founded: "2012",
+    employees: "50–200",
+    listings: [9]
+  },
+  {
+    id: "c10",
+    name: "Canal+ Cameroun",
+    short: "CP",
+    type: "Private Company",
+    region: "Centre",
+    city: "Yaoundé",
+    sector: "Media",
+    description: "Canal+ Cameroun is the leading pay-TV operator in Cameroon, offering premium entertainment, sports and news content to subscribers across Central and West Africa.",
+    website: "www.canalplus-cameroun.cm",
+    email: "hr@canalplus-cameroun.cm",
+    founded: "2000",
+    employees: "200+",
+    listings: [10]
+  },
+  {
+    id: "c11",
+    name: "Enabel Cameroon",
+    short: "EN",
+    type: "International Organization",
+    region: "North West",
+    city: "Bamenda",
+    sector: "Development",
+    description: "Enabel is the Belgian development agency implementing cooperation programmes in Cameroon. We focus on youth employment, vocational training, health and local governance in the North West and South West regions.",
+    website: "www.enabel.be/cameroon",
+    email: "info@enabel-cameroon.org",
+    founded: "2018",
+    employees: "50–200",
+    listings: [11]
+  },
+  {
+    id: "c12",
+    name: "MINADER",
+    short: "MN",
+    type: "Government Ministry",
+    region: "National",
+    city: "Yaoundé",
+    sector: "Agriculture",
+    description: "The Ministry of Agriculture and Rural Development of Cameroon oversees agricultural policy, rural development programmes, and food security initiatives across all regions of the country.",
+    website: "www.minader.cm",
+    email: "contact@minader.cm",
+    founded: "1960",
+    employees: "1000+",
+    listings: [12]
+  }
+];
+
+// ── Youth profiles (publicly visible) ────────────────────────────
+const PEOPLE = [
+  {
+    id: "p1",
+    name: "Acha Blessing",
+    initial: "A",
+    region: "Centre",
+    city: "Yaoundé",
+    bio: "Passionate web developer with 2 years of experience building responsive websites. Currently seeking a full-time role in a tech company in Yaoundé or Douala.",
+    skills: ["HTML", "CSS", "JavaScript", "React", "PHP", "MySQL"],
+    education: [{ degree: "HND Computer Science", school: "IUT Yaoundé", year: "2022–2024" }],
+    experience: [{ title: "Web Developer Intern", company: "TechHub Yaoundé", period: "Jan 2024 – Jun 2024" }]
+  },
+  {
+    id: "p2",
+    name: "Alice Nkeng",
+    initial: "A",
+    region: "Littoral",
+    city: "Douala",
+    bio: "Digital marketing specialist with expertise in social media management, content creation and Google Ads. Helping businesses grow their online presence in Cameroon.",
+    skills: ["Social Media Marketing", "Google Ads", "Content Creation", "SEO", "Canva", "Analytics"],
+    education: [{ degree: "BSc Marketing", school: "ESSEC Douala", year: "2019–2023" }],
+    experience: [{ title: "Marketing Assistant", company: "Jumia Cameroon", period: "2023 – Present" }]
+  },
+  {
+    id: "p3",
+    name: "Allan Mbah",
+    initial: "A",
+    region: "West",
+    city: "Bafoussam",
+    bio: "Software engineer specialising in mobile app development. Built 3 Android apps with over 5,000 downloads combined. Looking for internship or junior developer position.",
+    skills: ["Java", "Flutter", "Firebase", "Android Studio", "REST APIs", "Git"],
+    education: [{ degree: "BSc Software Engineering", school: "University of Dschang", year: "2020–2024" }],
+    experience: [{ title: "Freelance App Developer", company: "Self-employed", period: "2022 – Present" }]
+  },
+  {
+    id: "p4",
+    name: "Fatoumata Diallo",
+    initial: "F",
+    region: "Littoral",
+    city: "Douala",
+    bio: "Data analyst with strong skills in Excel, Python and data visualisation. Interested in health data and agricultural data projects across Cameroon and West Africa.",
+    skills: ["Python", "Excel", "Power BI", "SQL", "Data Visualisation", "Statistics"],
+    education: [{ degree: "BSc Statistics", school: "University of Douala", year: "2018–2022" }],
+    experience: [{ title: "Data Analyst Intern", company: "MTN Cameroon", period: "Jun 2022 – Dec 2022" }]
+  },
+  {
+    id: "p5",
+    name: "Emmanuel Tabi",
+    initial: "E",
+    region: "South West",
+    city: "Buea",
+    bio: "Young agronomist passionate about combining technology with farming. Working on a mobile app to help smallholder farmers access market price information in real time.",
+    skills: ["Agronomy", "Mobile Apps", "Python", "GIS Mapping", "Project Management"],
+    education: [{ degree: "BSc Agronomy", school: "University of Buea", year: "2019–2023" }],
+    experience: [{ title: "Agricultural Field Officer", company: "MINADER", period: "2023 – Present" }]
+  },
+  {
+    id: "p6",
+    name: "Marie-Claire Fouda",
+    initial: "M",
+    region: "Centre",
+    city: "Yaoundé",
+    bio: "Graphic designer and visual content creator with 3 years of experience working with brands, NGOs and media companies across Cameroon. Passionate about African visual identity.",
+    skills: ["Adobe Photoshop", "Illustrator", "InDesign", "Canva", "Video Editing", "Branding"],
+    education: [{ degree: "Diploma in Graphic Design", school: "ISTDI Yaoundé", year: "2020–2022" }],
+    experience: [
+      { title: "Graphic Designer", company: "Canal+ Cameroun", period: "2022 – Present" },
+      { title: "Freelance Designer", company: "Various clients", period: "2021 – Present" }
+    ]
+  },
+  {
+    id: "p7",
+    name: "Ibrahim Hamidou",
+    initial: "I",
+    region: "Adamaoua",
+    city: "Ngaoundéré",
+    bio: "Finance graduate seeking opportunities in banking and microfinance. Speaks French, English and Fulfulde. Committed to improving financial inclusion in northern Cameroon.",
+    skills: ["Financial Analysis", "Excel", "Accounting", "Microfinance", "French", "English"],
+    education: [{ degree: "BSc Finance", school: "University of Ngaoundéré", year: "2019–2023" }],
+    experience: [{ title: "Teller Trainee", company: "CCA Bank", period: "Jan 2024 – Apr 2024" }]
+  },
+  {
+    id: "p8",
+    name: "Sandra Enyong",
+    initial: "S",
+    region: "North West",
+    city: "Bamenda",
+    bio: "Public health graduate with field experience in community health programmes. Interested in health data management and NGO programme coordination roles.",
+    skills: ["Public Health", "Community Outreach", "Data Collection", "KoboToolbox", "French", "English"],
+    education: [{ degree: "BSc Public Health", school: "University of Bamenda", year: "2018–2022" }],
+    experience: [{ title: "Community Health Worker", company: "MSF Cameroon", period: "2022 – Present" }]
+  }
+];
+
+// ── Regions ──────────────────────────────────────────────────────
 const REGIONS = [
   { name: "Centre",     count: 142, lat: 3.867,  lng: 11.517 },
   { name: "Littoral",   count: 218, lat: 4.061,  lng: 9.777  },
@@ -155,6 +514,7 @@ const REGIONS = [
   { name: "East",       count: 17,  lat: 4.5,    lng: 13.8   }
 ];
 
+// ── Sectors ──────────────────────────────────────────────────────
 const SECTORS = [
   { name: "Technology",  icon: "💻", color: "#E1F5EE", count: 234 },
   { name: "Business",    icon: "🏢", color: "#EBF2FF", count: 187 },

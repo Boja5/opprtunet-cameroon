@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People — OpportuNet Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-header {
+      background: var(--dark-800);
+      padding: 48px 28px 40px;
+      border-bottom: 1px solid var(--dark-700);
+    }
+    .page-header-inner { max-width: 1120px; margin: 0 auto; }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 32px; font-weight: 700;
+      color: var(--white); letter-spacing: -0.5px; margin-bottom: 8px;
+    }
+    .page-header p {
+      font-size: 15px; color: rgba(255,255,255,0.45); font-weight: 300;
+    }
+
+    .people-layout { max-width: 1120px; margin: 0 auto; padding: 40px 28px; }
+
+    .people-search {
+      display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .people-search input {
+      flex: 1; min-width: 200px; padding: 10px 16px;
+      border: 1px solid var(--gray-200); border-radius: var(--radius-md);
+      font-size: 14px; font-family: var(--font-body); color: var(--dark-900);
+    }
+    .people-search input:focus { outline: none; border-color: var(--green-400); }
+    .people-search select {
+      padding: 10px 14px; border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md); font-size: 13px;
+      font-family: var(--font-body); color: var(--dark-700);
+      background: var(--white);
+    }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .person-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg); padding: 24px;
+      cursor: pointer; transition: var(--transition);
+    }
+    .person-card:hover {
+      border-color: var(--green-400);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+    .person-card-top {
+      display: flex; gap: 14px; align-items: center; margin-bottom: 14px;
+    }
+    .person-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--green-700);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 20px; color: var(--white); flex-shrink: 0;
+    }
+    .person-name {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700; color: var(--dark-900); margin-bottom: 3px;
+    }
+    .person-location { font-size: 12px; color: #888; }
+    .person-bio {
+      font-size: 13px; color: #555; line-height: 1.7;
+      font-weight: 300; margin-bottom: 14px;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .person-skills {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
+    }
+    .person-skill {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      background: var(--green-50); color: var(--green-800);
+      border: 1px solid var(--green-200);
+    }
+    .person-skill-more {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      background: var(--gray-100); color: #888;
+    }
+    .person-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 14px; border-top: 1px solid var(--gray-200);
+    }
+    .person-edu { font-size: 11px; color: #888; }
+    .btn-view-profile {
+      font-size: 12px; padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--green-700); color: var(--white);
+      border: none; cursor: pointer; transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .btn-view-profile:hover { background: var(--green-600); }
+
+    .results-info { font-size: 14px; color: #888; margin-bottom: 20px; }
+    .results-info strong { color: var(--dark-900); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 200; display: none;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal {
+      background: var(--white); border-radius: var(--radius-xl);
+      width: 100%; max-width: 600px; max-height: 90vh;
+      overflow-y: auto; position: relative;
+    }
+    .modal-header { background: var(--dark-800); padding: 28px 32px; position: relative; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 32px; height: 32px; background: rgba(255,255,255,0.1);
+      border: none; border-radius: 50%; color: var(--white);
+      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.2); }
+    .modal-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--green-700);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 26px; color: var(--white); margin-bottom: 14px;
+      border: 3px solid rgba(255,255,255,0.2);
+    }
+    .modal-name {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 700; color: var(--white); margin-bottom: 4px;
+    }
+    .modal-location { font-size: 13px; color: var(--green-400); }
+    .modal-body { padding: 28px 32px; }
+    .modal-section { margin-bottom: 24px; }
+    .modal-section-title {
+      font-family: var(--font-display); font-size: 13px;
+      font-weight: 600; color: var(--dark-900);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .modal-bio {
+      font-size: 14px; color: #444; line-height: 1.8; font-weight: 300;
+    }
+    .modal-skills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .modal-skill {
+      font-size: 12px; padding: 4px 12px; border-radius: 20px;
+      background: var(--green-50); color: var(--green-800);
+      border: 1px solid var(--green-200); font-weight: 500;
+    }
+    .edu-exp-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--gray-200);
+    }
+    .edu-exp-item:last-child { border-bottom: none; }
+    .edu-exp-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--green-50);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .edu-exp-title {
+      font-size: 13px; font-weight: 600; color: var(--dark-900);
+    }
+    .edu-exp-sub { font-size: 12px; color: #888; margin-top: 2px; }
+
+    @media (max-width: 600px) {
+      .people-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">OpportuNet</span>
+        <span class="logo-country">Cameroon</span>
+      </div>
+    </a>
+    <div class="navbar-links">
+      <a href="index.html"         class="nav-link">Home</a>
+      <a href="opportunities.html" class="nav-link">Opportunities</a>
+      <a href="companies.html"     class="nav-link">Companies</a>
+      <a href="people.html"        class="nav-link active">People</a>
+      <a href="map.html"           class="nav-link">Map</a>
+      <a href="about.html"         class="nav-link">About</a>
+    </div>
+    <div class="navbar-actions" id="navbar-actions"></div>
+  </nav>
+
+  <!-- ═══ PAGE HEADER ══════════════════════ -->
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>People & Talent</h1>
+      <p>Browse youth profiles, skills and talent across Cameroon</p>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN CONTENT ═════════════════════ -->
+  <div class="people-layout">
+
+    <div class="people-search">
+      <input type="text" id="people-search"
+        placeholder="🔍  Search by name, skill or location..." />
+      <select id="people-region">
+        <option value="">All Regions</option>
+        <option value="Centre">Centre</option>
+        <option value="Littoral">Littoral</option>
+        <option value="West">West</option>
+        <option value="North West">North West</option>
+        <option value="South West">South West</option>
+        <option value="Adamaoua">Adamaoua</option>
+        <option value="North">North</option>
+        <option value="Far North">Far North</option>
+        <option value="South">South</option>
+        <option value="East">East</option>
+      </select>
+    </div>
+
+    <div class="results-info" id="results-info">
+      Showing <strong>8</strong> profiles
+    </div>
+
+    <div class="people-grid" id="people-grid">
+      <!-- Rendered by JS -->
+    </div>
+
+  </div>
+
+  <!-- ═══ PERSON MODAL ═════════════════════ -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    updateNavbar();
+
+    function render() {
+      var query  = document.getElementById('people-search').value.trim().toLowerCase();
+      var region = document.getElementById('people-region').value;
+
+      var filtered = PEOPLE.filter(function(p) {
+        var matchQ = !query ||
+          p.name.toLowerCase().includes(query) ||
+          p.bio.toLowerCase().includes(query)  ||
+          p.city.toLowerCase().includes(query) ||
+          p.skills.some(function(s) { return s.toLowerCase().includes(query); });
+        var matchR = !region || p.region === region;
+        return matchQ && matchR;
+      });
+
+      document.getElementById('results-info').innerHTML =
+        'Showing <strong>' + filtered.length + '</strong> profile' +
+        (filtered.length === 1 ? '' : 's');
+
+      var grid = document.getElementById('people-grid');
+
+      if (filtered.length === 0) {
+        grid.innerHTML =
+          '<div style="text-align:center;padding:60px 20px;color:#888;grid-column:1/-1;">' +
+            '<div style="font-size:40px;margin-bottom:12px;">🔍</div>' +
+            '<p>No profiles found. Try a different search.</p>' +
+          '</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(function(person) {
+        var topSkills = person.skills.slice(0, 3);
+        var extraCount = person.skills.length - 3;
+        var edu = person.education && person.education.length > 0
+          ? person.education[0].school : '';
+
+        return (
+          '<div class="person-card" onclick="openModal(\'' + person.id + '\')">' +
+            '<div class="person-card-top">' +
+              '<div class="person-avatar">' + person.initial + '</div>' +
+              '<div>' +
+                '<div class="person-name">' + person.name + '</div>' +
+                '<div class="person-location">📍 ' + person.city + ', ' + person.region + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="person-bio">' + person.bio + '</div>' +
+            '<div class="person-skills">' +
+              topSkills.map(function(s) {
+                return '<span class="person-skill">' + s + '</span>';
+              }).join('') +
+              (extraCount > 0
+                ? '<span class="person-skill-more">+' + extraCount + ' more</span>'
+                : '') +
+            '</div>' +
+            '<div class="person-footer">' +
+              '<span class="person-edu">' + (edu ? '🎓 ' + edu : '') + '</span>' +
+              '<button class="btn-view-profile">View Profile</button>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    function openModal(id) {
+      var person = PEOPLE.find(function(p) { return p.id === id; });
+      if (!person) return;
+
+      var skillsHTML = person.skills.map(function(s) {
+        return '<span class="modal-skill">' + s + '</span>';
+      }).join('');
+
+      var eduHTML = (person.education || []).map(function(e) {
+        return (
+          '<div class="edu-exp-item">' +
+            '<div class="edu-exp-icon">🎓</div>' +
+            '<div>' +
+              '<div class="edu-exp-title">' + e.degree + '</div>' +
+              '<div class="edu-exp-sub">' + e.school +
+                (e.year ? ' · ' + e.year : '') + '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('') || '<p style="font-size:13px;color:#aaa;">Not specified</p>';
+
+      var expHTML = (person.experience || []).map(function(e) {
+        return (
+          '<div class="edu-exp-item">' +
+            '<div class="edu-exp-icon">💼</div>' +
+            '<div>' +
+              '<div class="edu-exp-title">' + e.title + '</div>' +
+              '<div class="edu-exp-sub">' + e.company +
+                (e.period ? ' · ' + e.period : '') + '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('') || '<p style="font-size:13px;color:#aaa;">Not specified</p>';
+
+      document.getElementById('modal').innerHTML =
+        '<div class="modal-header">' +
+          '<button class="modal-close" onclick="closeModal()">✕</button>' +
+          '<div class="modal-avatar">' + person.initial + '</div>' +
+          '<div class="modal-name">' + person.name + '</div>' +
+          '<div class="modal-location">📍 ' + person.city + ', ' + person.region + '</div>' +
+        '</div>' +
+        '<div class="modal-body">' +
+          '<div class="modal-section">' +
+            '<div class="modal-section-title">About</div>' +
+            '<div class="modal-bio">' + person.bio + '</div>' +
+          '</div>' +
+          '<div class="modal-section">' +
+            '<div class="modal-section-title">Skills</div>' +
+            '<div class="modal-skills">' + skillsHTML + '</div>' +
+          '</div>' +
+          '<div class="modal-section">' +
+            '<div class="modal-section-title">Education</div>' +
+            eduHTML +
+          '</div>' +
+          '<div class="modal-section">' +
+            '<div class="modal-section-title">Experience</div>' +
+            expHTML +
+          '</div>' +
+        '</div>';
+
+      document.getElementById('modal-overlay').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    window.closeModal = function(e) {
+      if (e && e.target !== document.getElementById('modal-overlay')) return;
+      document.getElementById('modal-overlay').classList.remove('visible');
+      document.body.style.overflow = '';
+    };
+
+    document.getElementById('people-search').addEventListener('input', render);
+    document.getElementById('people-region').addEventListener('change', render);
+
+    render();
+  </script>
+
+</body>
+</html>

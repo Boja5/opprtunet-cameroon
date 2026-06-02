@@ -12,7 +12,6 @@
 </head>
 <body>
 
-  <!-- ═══ NAVBAR ═══════════════════════════ -->
   <nav class="navbar">
     <a href="index.html" class="navbar-logo">
       <div class="logo-icon">🌿</div>
@@ -24,45 +23,38 @@
     <div class="navbar-links">
       <a href="index.html"         class="nav-link active">Home</a>
       <a href="opportunities.html" class="nav-link">Opportunities</a>
+      <a href="companies.html"     class="nav-link">Companies</a>
+      <a href="people.html"        class="nav-link">People</a>
       <a href="map.html"           class="nav-link">Map</a>
       <a href="about.html"         class="nav-link">About</a>
     </div>
     <div class="navbar-actions" id="navbar-actions"></div>
   </nav>
 
-  <!-- ═══ HERO ══════════════════════════════ -->
   <section class="hero">
     <div class="hero-inner">
-
-      <!-- Left: Text -->
       <div class="hero-content">
         <div class="hero-badge">
           <span></span>
           Responding to Cameroon's youth employment crisis
         </div>
-
         <h1>
           Find Your<br>
           <span class="accent">Opportunity</span><br>
           <span class="underline-accent">Anywhere</span> in Cameroon
         </h1>
-
         <p class="hero-desc">
           Jobs, internships, training programs, and grants — all in one place.
           Connect to real opportunities across all 10 regions of Cameroon.
         </p>
-
         <div class="hero-cta">
-          <button class="btn-hero-primary"
-            onclick="window.location.href='opportunities.html'">
+          <button class="btn-hero-primary" onclick="window.location.href='opportunities.html'">
             Explore Opportunities →
           </button>
-          <button class="btn-hero-secondary"
-            onclick="window.location.href='map.html'">
+          <button class="btn-hero-secondary" onclick="window.location.href='map.html'">
             🗺 View on Map
           </button>
         </div>
-
         <div class="hero-stats">
           <div>
             <div class="hero-stat-num" data-target="1240" data-suffix="+">0</div>
@@ -83,11 +75,8 @@
         </div>
       </div>
 
-      <!-- Right: Card Stack -->
       <div class="hero-visual">
         <div class="hero-card-stack">
-
-          <!-- Card 1 (back) -->
           <div class="hero-card">
             <div class="hero-card-org">
               <div class="org-avatar">UN</div>
@@ -106,8 +95,6 @@
               <button class="btn-apply">Apply</button>
             </div>
           </div>
-
-          <!-- Card 2 (middle) -->
           <div class="hero-card">
             <div class="hero-card-org">
               <div class="org-avatar">OC</div>
@@ -126,8 +113,6 @@
               <button class="btn-apply">Apply</button>
             </div>
           </div>
-
-          <!-- Card 3 (front) -->
           <div class="hero-card">
             <div class="hero-card-org">
               <div class="org-avatar">TH</div>
@@ -147,10 +132,7 @@
               <button class="btn-apply">Apply</button>
             </div>
           </div>
-
         </div>
-
-        <!-- Floating badge -->
         <div class="hero-floating-badge">
           <div class="badge-icon">🎯</div>
           <div>
@@ -159,20 +141,14 @@
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ═══ SEARCH BAR ════════════════════════ -->
   <section class="search-section">
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input
-        type="text"
-        id="search-input"
-        class="search-input"
-        placeholder="Search jobs, training, internships..."
-      />
+      <input type="text" id="search-input" class="search-input"
+        placeholder="Search jobs, training, internships..." />
       <div class="search-divider"></div>
       <select id="search-region" class="search-select">
         <option value="">All Regions</option>
@@ -199,7 +175,6 @@
     </div>
   </section>
 
-  <!-- ═══ TRUST BAR ════════════════════════ -->
   <div class="trust-bar">
     <div class="trust-inner">
       <span class="trust-label">Trusted by organizations including:</span>
@@ -214,163 +189,136 @@
     </div>
   </div>
 
-  <!-- ═══ OPPORTUNITIES SECTION ═══════════ -->
   <section class="section">
     <div class="section-header">
       <div>
         <h2 class="section-title">Latest Opportunities</h2>
-        <p class="section-subtitle">
-          Fresh listings updated daily from across Cameroon
-        </p>
+        <p class="section-subtitle">Fresh listings updated daily from across Cameroon</p>
       </div>
       <a href="opportunities.html" class="section-link">View all →</a>
     </div>
-
     <div class="filter-tabs">
-      <button class="filter-tab active" data-filter="all">
-        All <span class="count">8</span>
-      </button>
-      <button class="filter-tab" data-filter="job">
-        Jobs <span class="count">3</span>
-      </button>
-      <button class="filter-tab" data-filter="internship">
-        Internships <span class="count">1</span>
-      </button>
-      <button class="filter-tab" data-filter="training">
-        Training <span class="count">2</span>
-      </button>
-      <button class="filter-tab" data-filter="grant">
-        Grants <span class="count">2</span>
-      </button>
+      <button class="filter-tab active" data-filter="all">All <span class="count">12</span></button>
+      <button class="filter-tab" data-filter="job">Jobs <span class="count">5</span></button>
+      <button class="filter-tab" data-filter="internship">Internships <span class="count">2</span></button>
+      <button class="filter-tab" data-filter="training">Training <span class="count">3</span></button>
+      <button class="filter-tab" data-filter="grant">Grants <span class="count">2</span></button>
     </div>
-
-    <div class="cards-grid" id="cards-grid">
-      <!-- Rendered by main.js -->
-    </div>
+    <div class="cards-grid" id="cards-grid"></div>
   </section>
 
-  <!-- ═══ MAP PREVIEW ══════════════════════ -->
   <section class="map-preview">
     <div class="map-preview-inner">
       <div class="map-text">
         <h2>Opportunities<br>Near You</h2>
-        <p>
-          Browse opportunities by region. Whether you're in Yaoundé,
-          Douala, Bamenda or Garoua — there are listings close to you.
-        </p>
+        <p>Browse opportunities by region. Whether you're in Yaoundé, Douala, Bamenda or Garoua — there are listings close to you.</p>
         <div class="region-list" id="region-list"></div>
         <a href="map.html" class="btn-map">Open Full Map →</a>
       </div>
       <div class="map-frame">
         <div class="map-icon">🗺</div>
         <p class="map-frame-text">Interactive Map of Cameroon</p>
-        <p class="map-frame-sub">
-          Powered by Leaflet.js — available on the Map page
-        </p>
+        <p class="map-frame-sub">Powered by Leaflet.js — available on the Map page</p>
       </div>
     </div>
   </section>
 
-  <!-- ═══ CATEGORIES ═══════════════════════ -->
   <section class="categories-section">
     <div class="section-header">
       <div>
         <h2 class="section-title">Browse by Sector</h2>
-        <p class="section-subtitle">
-          Find opportunities in the field that matches your skills
-        </p>
+        <p class="section-subtitle">Find opportunities in the field that matches your skills</p>
       </div>
     </div>
     <div class="categories-grid" id="categories-grid"></div>
   </section>
 
-  <!-- ═══ PROBLEM BANNER ═══════════════════ -->
+  <!-- Directory Preview -->
+  <section class="section" style="background:var(--gray-100);">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Explore the Community</h2>
+        <p class="section-subtitle">Browse companies posting opportunities and talented youth profiles</p>
+      </div>
+    </div>
+    <div style="max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:28px;cursor:pointer;transition:var(--transition);"
+           onclick="window.location.href='companies.html'"
+           onmouseover="this.style.borderColor='var(--green-400)'"
+           onmouseout="this.style.borderColor='var(--gray-200)'">
+        <div style="font-size:36px;margin-bottom:12px;">🏢</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--dark-900);margin-bottom:8px;">Companies & Organizations</div>
+        <div style="font-size:14px;color:#666;line-height:1.7;margin-bottom:16px;">Browse all 12 organizations posting opportunities on OpportuNet. View company profiles, descriptions and active listings.</div>
+        <div style="font-size:13px;color:var(--green-700);font-weight:500;">Browse Companies →</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:28px;cursor:pointer;transition:var(--transition);"
+           onclick="window.location.href='people.html'"
+           onmouseover="this.style.borderColor='var(--green-400)'"
+           onmouseout="this.style.borderColor='var(--gray-200)'">
+        <div style="font-size:36px;margin-bottom:12px;">👥</div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--dark-900);margin-bottom:8px;">People & Talent</div>
+        <div style="font-size:14px;color:#666;line-height:1.7;margin-bottom:16px;">Browse youth profiles from across Cameroon. View skills, education, experience and professional backgrounds.</div>
+        <div style="font-size:13px;color:var(--green-700);font-weight:500;">Browse People →</div>
+      </div>
+    </div>
+  </section>
+
   <section class="problem-banner">
     <div class="problem-inner">
       <div class="problem-text">
         <h2>Why OpportuNet<br>Was Built</h2>
-        <p>
-          Cameroon's youth face real barriers: unemployment, lack of
-          access to quality training, and information gaps that prevent
-          them from finding the opportunities that exist. OpportuNet
-          directly addresses these challenges identified in national
-          leadership discourse.
-        </p>
-        <a href="about.html" class="problem-link">
-          Read our full problem statement →
-        </a>
+        <p>Cameroon's youth face real barriers: unemployment, lack of access to quality training, and information gaps. OpportuNet directly addresses these challenges identified in national leadership discourse.</p>
+        <a href="about.html" class="problem-link">Read our full problem statement →</a>
       </div>
       <div class="problem-pills">
         <div class="problem-pill">
           <div class="problem-pill-icon">📉</div>
           <div>
-            <div class="problem-pill-text">
-              Unemployment & Underemployment
-            </div>
-            <div class="problem-pill-sub">
-              Connecting youth to real job listings
-            </div>
+            <div class="problem-pill-text">Unemployment & Underemployment</div>
+            <div class="problem-pill-sub">Connecting youth to real job listings</div>
           </div>
         </div>
         <div class="problem-pill">
           <div class="problem-pill-icon">🎓</div>
           <div>
-            <div class="problem-pill-text">
-              Lack of Access to Quality Training
-            </div>
-            <div class="problem-pill-sub">
-              Centralised training programme database
-            </div>
+            <div class="problem-pill-text">Lack of Access to Quality Training</div>
+            <div class="problem-pill-sub">Centralised training programme database</div>
           </div>
         </div>
         <div class="problem-pill">
           <div class="problem-pill-icon">ℹ️</div>
           <div>
-            <div class="problem-pill-text">
-              Lack of Information & Inefficient Support
-            </div>
-            <div class="problem-pill-sub">
-              One platform, all regions, updated daily
-            </div>
+            <div class="problem-pill-text">Lack of Information & Inefficient Support</div>
+            <div class="problem-pill-sub">One platform, all regions, updated daily</div>
           </div>
         </div>
         <div class="problem-pill">
           <div class="problem-pill-icon">💻</div>
           <div>
             <div class="problem-pill-text">Digital Misuse</div>
-            <div class="problem-pill-sub">
-              Redirecting youth to productive digital tools
-            </div>
+            <div class="problem-pill-sub">Redirecting youth to productive digital tools</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ FOOTER ════════════════════════════ -->
   <footer class="footer">
     <div class="footer-grid">
       <div class="footer-brand">
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="font-size:22px">🌿</span>
-          <span style="font-family:var(--font-display);font-size:16px;
-                       font-weight:700;color:var(--white);">
-            OpportuNet Cameroon
-          </span>
+          <span style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--white);">OpportuNet Cameroon</span>
         </div>
-        <p>
-          Connecting Cameroonian youth to jobs, internships, training
-          and grants across all 10 regions. Built as a direct response
-          to the national youth employment challenge.
-        </p>
+        <p>Connecting Cameroonian youth to jobs, internships, training and grants across all 10 regions.</p>
       </div>
       <div class="footer-col">
         <h4>Platform</h4>
         <a href="opportunities.html">Browse all</a>
+        <a href="companies.html">Companies</a>
+        <a href="people.html">People</a>
         <a href="map.html">Map view</a>
         <a href="submit.html">Post a listing</a>
-        <a href="opportunities.html?type=training">Training</a>
-        <a href="opportunities.html?type=grant">Grants</a>
       </div>
       <div class="footer-col">
         <h4>Regions</h4>
@@ -390,9 +338,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">
-        © 2026 OpportuNet Cameroon. Built for Cameroonian Youth.
-      </span>
+      <span class="footer-copy">© 2026 OpportuNet Cameroon. Built for Cameroonian Youth.</span>
       <div class="footer-mission">
         <div class="flag-strip">
           <span style="background:#007A5E;"></span>
@@ -404,7 +350,6 @@
     </div>
   </footer>
 
-  <!-- Scripts — order matters -->
   <script src="js/data.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
