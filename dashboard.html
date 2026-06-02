@@ -9,303 +9,80 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    .dash-layout {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 40px 28px;
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-
-    /* Sidebar */
-    .dash-sidebar {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      position: sticky;
-      top: 88px;
-    }
-    .dash-company-card {
-      background: var(--dark-800);
-      padding: 24px;
-      text-align: center;
-    }
-    .dash-company-avatar {
-      width: 64px; height: 64px;
-      border-radius: var(--radius-md);
-      background: var(--green-700);
-      display: flex; align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-weight: 700; font-size: 24px;
-      color: var(--white);
-      margin: 0 auto 12px;
-    }
-    .dash-company-name {
-      font-family: var(--font-display);
-      font-size: 16px; font-weight: 700;
-      color: var(--white); margin-bottom: 4px;
-    }
-    .dash-company-type {
-      font-size: 12px; color: var(--green-400);
-    }
-    .dash-nav {
-      padding: 12px 8px;
-    }
-    .dash-nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: var(--radius-md);
-      font-size: 13px; color: #666;
-      cursor: pointer; transition: var(--transition);
-      margin-bottom: 2px;
-    }
-    .dash-nav-item:hover { background: var(--gray-100); color: var(--dark-900); }
-    .dash-nav-item.active { background: var(--green-50); color: var(--green-700); font-weight: 500; }
-    .dash-nav-icon { font-size: 16px; }
-
-    /* Main area */
-    .dash-main {}
-
-    /* Stats row */
-    .dash-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px; margin-bottom: 24px;
-    }
-    .dash-stat-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-    }
-    .dash-stat-num {
-      font-family: var(--font-display);
-      font-size: 28px; font-weight: 700;
-      color: var(--dark-900); margin-bottom: 4px;
-    }
-    .dash-stat-label { font-size: 13px; color: #888; }
-
-    /* Section header */
-    .dash-section-header {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 16px;
-    }
-    .dash-section-title {
-      font-family: var(--font-display);
-      font-size: 18px; font-weight: 700; color: var(--dark-900);
-    }
-    .btn-new-listing {
-      background: var(--green-700); color: var(--white);
-      border: none; padding: 9px 20px;
-      border-radius: var(--radius-md);
-      font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: var(--transition);
-      font-family: var(--font-body);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .btn-new-listing:hover { background: var(--green-600); }
-
-    /* Panels */
-    .dash-panel { display: none; }
-    .dash-panel.active { display: block; }
-
-    /* Listing cards */
-    .listing-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 20px 24px;
-      margin-bottom: 12px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 16px; align-items: center;
-    }
-    .listing-card-title {
-      font-family: var(--font-display);
-      font-size: 15px; font-weight: 600;
-      color: var(--dark-900); margin-bottom: 4px;
-    }
-    .listing-card-meta {
-      font-size: 12px; color: #888;
-      display: flex; gap: 12px; flex-wrap: wrap;
-      margin-top: 8px;
-    }
-    .listing-card-actions {
-      display: flex; gap: 8px;
-    }
-    .btn-view {
-      font-size: 12px; padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--gray-200);
-      background: var(--white); color: #666;
-      cursor: pointer; transition: var(--transition);
-      font-family: var(--font-body);
-    }
-    .btn-view:hover { border-color: var(--green-400); color: var(--green-700); }
-    .btn-delete {
-      font-size: 12px; padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid #fcc; background: #fff5f5;
-      color: #c53030; cursor: pointer; transition: var(--transition);
-      font-family: var(--font-body);
-    }
-    .btn-delete:hover { background: #fed7d7; }
-
-    /* Post listing form */
-    .post-form-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-    }
-    .post-form-header {
-      background: var(--dark-800);
-      padding: 20px 28px;
-      font-family: var(--font-display);
-      font-size: 16px; font-weight: 600; color: var(--white);
-    }
-    .post-form-body { padding: 28px; }
-
-    .pf-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px; margin-bottom: 18px;
-    }
-    .pf-row.single { grid-template-columns: 1fr; }
-    .pf-group { display: flex; flex-direction: column; gap: 6px; }
-    .pf-label {
-      font-size: 13px; font-weight: 500; color: var(--dark-900);
-    }
-    .pf-label span { color: var(--green-600); }
-    .pf-input, .pf-select, .pf-textarea {
-      padding: 10px 14px;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      font-size: 14px; font-family: var(--font-body);
-      color: var(--dark-900); background: var(--white);
-      transition: var(--transition);
-    }
-    .pf-input:focus, .pf-select:focus, .pf-textarea:focus {
-      outline: none; border-color: var(--green-400);
-      box-shadow: 0 0 0 3px rgba(29,158,117,0.08);
-    }
-    .pf-input.error, .pf-select.error { border-color: #e53e3e; }
-    .pf-textarea { resize: vertical; min-height: 110px; }
-    .pf-error { font-size: 11px; color: #e53e3e; display: none; }
-    .pf-error.visible { display: block; }
-
-    /* Type selector in form */
-    .pf-type-grid {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 8px; margin-bottom: 18px;
-    }
-    .pf-type-opt {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      padding: 10px 6px; text-align: center;
-      cursor: pointer; transition: var(--transition);
-      font-size: 12px; color: #666;
-    }
-    .pf-type-opt:hover { border-color: var(--green-400); }
-    .pf-type-opt.selected {
-      border-color: var(--green-700);
-      background: var(--green-50); color: var(--green-800);
-      font-weight: 500;
-    }
-    .pf-type-opt-icon { font-size: 20px; margin-bottom: 4px; }
-
-    /* Requirements */
-    .req-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-    .req-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 12px; background: var(--gray-100);
-      border-radius: var(--radius-md); font-size: 13px;
-    }
+    .dash-layout { max-width:1120px; margin:0 auto; padding:40px 28px; display:grid; grid-template-columns:260px 1fr; gap:28px; align-items:start; }
+    .dash-sidebar { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); overflow:hidden; position:sticky; top:88px; }
+    .dash-company-card { background:var(--dark-800); padding:24px; text-align:center; }
+    .dash-company-avatar { width:64px; height:64px; border-radius:var(--radius-md); background:var(--green-700); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:24px; color:var(--white); margin:0 auto 12px; }
+    .dash-company-name { font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--white); margin-bottom:4px; }
+    .dash-company-type { font-size:12px; color:var(--green-400); }
+    .dash-nav { padding:12px 8px; }
+    .dash-nav-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:var(--radius-md); font-size:13px; color:#666; cursor:pointer; transition:var(--transition); margin-bottom:2px; }
+    .dash-nav-item:hover { background:var(--gray-100); color:var(--dark-900); }
+    .dash-nav-item.active { background:var(--green-50); color:var(--green-700); font-weight:500; }
+    .dash-nav-icon { font-size:16px; }
+    .dash-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+    .dash-stat-card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); padding:20px; }
+    .dash-stat-num { font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--dark-900); margin-bottom:4px; }
+    .dash-stat-label { font-size:13px; color:#888; }
+    .dash-section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .dash-section-title { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--dark-900); }
+    .btn-new-listing { background:var(--green-700); color:var(--white); border:none; padding:9px 20px; border-radius:var(--radius-md); font-size:13px; font-weight:500; cursor:pointer; transition:var(--transition); font-family:var(--font-body); display:flex; align-items:center; gap:6px; }
+    .btn-new-listing:hover { background:var(--green-600); }
+    .dash-panel { display:none; }
+    .dash-panel.active { display:block; }
+    .listing-card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); padding:20px 24px; margin-bottom:12px; display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; }
+    .listing-card-title { font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--dark-900); margin-bottom:4px; }
+    .listing-card-meta { font-size:12px; color:#888; display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+    .listing-card-actions { display:flex; gap:8px; }
+    .btn-view { font-size:12px; padding:6px 14px; border-radius:var(--radius-sm); border:1px solid var(--gray-200); background:var(--white); color:#666; cursor:pointer; transition:var(--transition); font-family:var(--font-body); }
+    .btn-view:hover { border-color:var(--green-400); color:var(--green-700); }
+    .btn-delete { font-size:12px; padding:6px 14px; border-radius:var(--radius-sm); border:1px solid #fcc; background:#fff5f5; color:#c53030; cursor:pointer; transition:var(--transition); font-family:var(--font-body); }
+    .btn-delete:hover { background:#fed7d7; }
+    .post-form-card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-xl); overflow:hidden; }
+    .post-form-header { background:var(--dark-800); padding:20px 28px; font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--white); }
+    .post-form-body { padding:28px; }
+    .pf-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+    .pf-row.single { grid-template-columns:1fr; }
+    .pf-group { display:flex; flex-direction:column; gap:6px; }
+    .pf-label { font-size:13px; font-weight:500; color:var(--dark-900); }
+    .pf-label span { color:var(--green-600); }
+    .pf-input,.pf-select,.pf-textarea { padding:10px 14px; border:1px solid var(--gray-200); border-radius:var(--radius-md); font-size:14px; font-family:var(--font-body); color:var(--dark-900); background:var(--white); transition:var(--transition); }
+    .pf-input:focus,.pf-select:focus,.pf-textarea:focus { outline:none; border-color:var(--green-400); box-shadow:0 0 0 3px rgba(29,158,117,0.08); }
+    .pf-input.error,.pf-select.error { border-color:#e53e3e; }
+    .pf-textarea { resize:vertical; min-height:110px; }
+    .pf-error { font-size:11px; color:#e53e3e; display:none; }
+    .pf-error.visible { display:block; }
+    .pf-type-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:18px; }
+    .pf-type-opt { border:1px solid var(--gray-200); border-radius:var(--radius-md); padding:10px 6px; text-align:center; cursor:pointer; transition:var(--transition); font-size:12px; color:#666; }
+    .pf-type-opt:hover { border-color:var(--green-400); }
+    .pf-type-opt.selected { border-color:var(--green-700); background:var(--green-50); color:var(--green-800); font-weight:500; }
+    .pf-type-opt-icon { font-size:20px; margin-bottom:4px; }
+    .req-list { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+    .req-item { display:flex; align-items:center; gap:8px; padding:7px 12px; background:var(--gray-100); border-radius:var(--radius-md); font-size:13px; }
     .req-dot { width:6px; height:6px; border-radius:50%; background:var(--green-600); flex-shrink:0; }
-    .req-text { flex: 1; }
+    .req-text { flex:1; }
     .req-rm { background:none; border:none; color:#bbb; cursor:pointer; font-size:16px; padding:0; transition:var(--transition); }
     .req-rm:hover { color:#e53e3e; }
     .req-add-row { display:flex; gap:8px; }
-    .req-add-input {
-      flex:1; padding:8px 12px;
-      border:1px solid var(--gray-200); border-radius:var(--radius-md);
-      font-size:13px; font-family:var(--font-body);
-    }
+    .req-add-input { flex:1; padding:8px 12px; border:1px solid var(--gray-200); border-radius:var(--radius-md); font-size:13px; font-family:var(--font-body); }
     .req-add-input:focus { outline:none; border-color:var(--green-400); }
-    .req-add-btn {
-      background:var(--green-700); color:var(--white);
-      border:none; padding:8px 16px; border-radius:var(--radius-md);
-      font-size:13px; font-weight:500; cursor:pointer; transition:var(--transition);
-    }
+    .req-add-btn { background:var(--green-700); color:var(--white); border:none; padding:8px 16px; border-radius:var(--radius-md); font-size:13px; font-weight:500; cursor:pointer; transition:var(--transition); }
     .req-add-btn:hover { background:var(--green-600); }
-
-    .post-submit {
-      background: var(--green-700); color: var(--white);
-      border: none; padding: 12px 32px;
-      border-radius: var(--radius-md);
-      font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: var(--transition);
-      font-family: var(--font-body);
-    }
-    .post-submit:hover { background: var(--green-600); }
-
-    .post-alert {
-      padding: 12px 16px; border-radius: var(--radius-md);
-      font-size: 13px; margin-bottom: 20px; display: none;
-    }
-    .post-alert.success {
-      background: var(--green-50); color: var(--green-800);
-      border: 1px solid var(--green-200); display: block;
-    }
-    .post-alert.error {
-      background: #FEF0F0; color: #8a1a1a;
-      border: 1px solid #f5c6c6; display: block;
-    }
-
-    /* Company profile panel */
-    .profile-form { max-width: 600px; }
-    .profile-avatar-row {
-      display: flex; align-items: center;
-      gap: 20px; margin-bottom: 28px;
-    }
-    .profile-avatar-big {
-      width: 80px; height: 80px;
-      border-radius: var(--radius-md);
-      background: var(--green-700);
-      display: flex; align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 30px; font-weight: 700;
-      color: var(--white); flex-shrink: 0;
-    }
-
-    .empty-listings {
-      text-align: center; padding: 60px 20px;
-      color: #aaa;
-    }
-    .empty-listings-icon { font-size: 48px; margin-bottom: 14px; }
-    .empty-listings h3 {
-      font-family: var(--font-display);
-      font-size: 18px; color: var(--dark-900); margin-bottom: 8px;
-    }
-    .empty-listings p { font-size: 14px; }
-
-    @media (max-width: 768px) {
-      .dash-layout { grid-template-columns: 1fr; }
-      .dash-sidebar { position: static; }
-      .dash-stats   { grid-template-columns: 1fr 1fr; }
-      .pf-row       { grid-template-columns: 1fr; }
-      .pf-type-grid { grid-template-columns: 1fr 1fr; }
-    }
+    .post-submit { background:var(--green-700); color:var(--white); border:none; padding:12px 32px; border-radius:var(--radius-md); font-size:14px; font-weight:500; cursor:pointer; transition:var(--transition); font-family:var(--font-body); }
+    .post-submit:hover { background:var(--green-600); }
+    .post-submit:disabled { background:#aaa; cursor:not-allowed; }
+    .post-alert { padding:12px 16px; border-radius:var(--radius-md); font-size:13px; margin-bottom:20px; display:none; }
+    .post-alert.success { background:var(--green-50); color:var(--green-800); border:1px solid var(--green-200); display:block; }
+    .post-alert.error { background:#FEF0F0; color:#8a1a1a; border:1px solid #f5c6c6; display:block; }
+    .empty-listings { text-align:center; padding:60px 20px; color:#aaa; }
+    .empty-listings-icon { font-size:48px; margin-bottom:14px; }
+    .empty-listings h3 { font-family:var(--font-display); font-size:18px; color:var(--dark-900); margin-bottom:8px; }
+    .loading { text-align:center; padding:40px; color:#888; font-size:14px; }
+    @media (max-width:768px) { .dash-layout { grid-template-columns:1fr; } .dash-sidebar { position:static; } .dash-stats { grid-template-columns:1fr 1fr; } .pf-row { grid-template-columns:1fr; } .pf-type-grid { grid-template-columns:1fr 1fr; } }
   </style>
 </head>
 <body>
 
-  <!-- ═══ NAVBAR ═══════════════════════════ -->
   <nav class="navbar">
     <a href="index.html" class="navbar-logo">
       <div class="logo-icon">🌿</div>
@@ -317,16 +94,15 @@
     <div class="navbar-links">
       <a href="index.html"         class="nav-link">Home</a>
       <a href="opportunities.html" class="nav-link">Opportunities</a>
+      <a href="companies.html"     class="nav-link">Companies</a>
+      <a href="people.html"        class="nav-link">People</a>
       <a href="map.html"           class="nav-link">Map</a>
       <a href="about.html"         class="nav-link">About</a>
     </div>
     <div class="navbar-actions" id="navbar-actions"></div>
   </nav>
 
-  <!-- ═══ DASHBOARD LAYOUT ═════════════════ -->
   <div class="dash-layout">
-
-    <!-- Sidebar -->
     <aside class="dash-sidebar">
       <div class="dash-company-card">
         <div class="dash-company-avatar" id="company-avatar">C</div>
@@ -334,117 +110,69 @@
         <div class="dash-company-type"   id="company-type">Organization</div>
       </div>
       <nav class="dash-nav">
-        <div class="dash-nav-item active" onclick="showPanel('overview')">
-          <span class="dash-nav-icon">📊</span> Overview
-        </div>
-        <div class="dash-nav-item" onclick="showPanel('listings')">
-          <span class="dash-nav-icon">📋</span> My Listings
-        </div>
-        <div class="dash-nav-item" onclick="showPanel('post')">
-          <span class="dash-nav-icon">➕</span> Post New
-        </div>
-        <div class="dash-nav-item" onclick="showPanel('company-profile')">
-          <span class="dash-nav-icon">🏢</span> Company Profile
-        </div>
+        <div class="dash-nav-item active" onclick="showPanel('overview')"><span class="dash-nav-icon">📊</span> Overview</div>
+        <div class="dash-nav-item" onclick="showPanel('listings')"><span class="dash-nav-icon">📋</span> My Listings</div>
+        <div class="dash-nav-item" onclick="showPanel('post')"><span class="dash-nav-icon">➕</span> Post New</div>
+        <div class="dash-nav-item" onclick="showPanel('company-profile')"><span class="dash-nav-icon">🏢</span> Company Profile</div>
         <div class="dash-nav-item" style="margin-top:8px;border-top:1px solid var(--gray-200);padding-top:10px;"
-             onclick="Auth.logout()">
-          <span class="dash-nav-icon">🚪</span> Logout
-        </div>
+             onclick="doLogout()"><span class="dash-nav-icon">🚪</span> Logout</div>
       </nav>
     </aside>
 
-    <!-- Main -->
     <main class="dash-main">
 
-      <!-- Overview panel -->
+      <!-- Overview -->
       <div class="dash-panel active" id="panel-overview">
         <div class="dash-section-header">
           <div class="dash-section-title" id="welcome-title">Dashboard</div>
-          <button class="btn-new-listing" onclick="showPanel('post')">
-            + Post New Listing
-          </button>
+          <button class="btn-new-listing" onclick="showPanel('post')">+ Post New Listing</button>
         </div>
-
         <div class="dash-stats">
-          <div class="dash-stat-card">
-            <div class="dash-stat-num" id="stat-listings">0</div>
-            <div class="dash-stat-label">Active Listings</div>
-          </div>
-          <div class="dash-stat-card">
-            <div class="dash-stat-num" id="stat-views">—</div>
-            <div class="dash-stat-label">Profile Views</div>
-          </div>
-          <div class="dash-stat-card">
-            <div class="dash-stat-num" id="stat-region">—</div>
-            <div class="dash-stat-label">Your Region</div>
-          </div>
+          <div class="dash-stat-card"><div class="dash-stat-num" id="stat-listings">0</div><div class="dash-stat-label">Active Listings</div></div>
+          <div class="dash-stat-card"><div class="dash-stat-num" id="stat-views">—</div><div class="dash-stat-label">Profile Views</div></div>
+          <div class="dash-stat-card"><div class="dash-stat-num" id="stat-region">—</div><div class="dash-stat-label">Your Region</div></div>
         </div>
-
-        <!-- Recent listings preview -->
-        <div style="background:var(--white);border:1px solid var(--gray-200);
-                    border-radius:var(--radius-lg);padding:24px;">
-          <div style="font-family:var(--font-display);font-size:15px;
-                      font-weight:600;color:var(--dark-900);margin-bottom:16px;">
-            Recent Listings
-          </div>
-          <div id="overview-listings"></div>
+        <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:24px;">
+          <div style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--dark-900);margin-bottom:16px;">Recent Listings</div>
+          <div id="overview-listings"><div class="loading">Loading...</div></div>
         </div>
       </div>
 
-      <!-- My listings panel -->
+      <!-- My Listings -->
       <div class="dash-panel" id="panel-listings">
         <div class="dash-section-header">
           <div class="dash-section-title">My Listings</div>
-          <button class="btn-new-listing" onclick="showPanel('post')">
-            + Post New
-          </button>
+          <button class="btn-new-listing" onclick="showPanel('post')">+ Post New</button>
         </div>
-        <div id="all-listings"></div>
+        <div id="all-listings"><div class="loading">Loading...</div></div>
       </div>
 
-      <!-- Post new listing panel -->
+      <!-- Post New -->
       <div class="dash-panel" id="panel-post">
         <div class="dash-section-header">
           <div class="dash-section-title">Post a New Listing</div>
         </div>
-
         <div class="post-form-card">
           <div class="post-form-header">📋 New Opportunity Details</div>
           <div class="post-form-body">
-
             <div class="post-alert" id="post-alert"></div>
-
-            <!-- Type -->
             <div style="margin-bottom:18px;">
-              <div class="pf-label" style="margin-bottom:8px;">
-                Type <span>*</span>
-              </div>
+              <div class="pf-label" style="margin-bottom:8px;">Type <span>*</span></div>
               <div class="pf-type-grid">
-                <div class="pf-type-opt" onclick="selectPFType('job',this)">
-                  <div class="pf-type-opt-icon">💼</div>Job
-                </div>
-                <div class="pf-type-opt" onclick="selectPFType('internship',this)">
-                  <div class="pf-type-opt-icon">🎓</div>Internship
-                </div>
-                <div class="pf-type-opt" onclick="selectPFType('training',this)">
-                  <div class="pf-type-opt-icon">📚</div>Training
-                </div>
-                <div class="pf-type-opt" onclick="selectPFType('grant',this)">
-                  <div class="pf-type-opt-icon">💰</div>Grant
-                </div>
+                <div class="pf-type-opt" onclick="selectPFType('job',this)"><div class="pf-type-opt-icon">💼</div>Job</div>
+                <div class="pf-type-opt" onclick="selectPFType('internship',this)"><div class="pf-type-opt-icon">🎓</div>Internship</div>
+                <div class="pf-type-opt" onclick="selectPFType('training',this)"><div class="pf-type-opt-icon">📚</div>Training</div>
+                <div class="pf-type-opt" onclick="selectPFType('grant',this)"><div class="pf-type-opt-icon">💰</div>Grant</div>
               </div>
               <div class="pf-error" id="pf-err-type">Please select a type</div>
             </div>
-
             <div class="pf-row single">
               <div class="pf-group">
                 <label class="pf-label">Title <span>*</span></label>
-                <input type="text" class="pf-input" id="pf-title"
-                  placeholder="e.g. Junior Web Developer" />
+                <input type="text" class="pf-input" id="pf-title" placeholder="e.g. Junior Web Developer" />
                 <div class="pf-error" id="pf-err-title">Please enter a title</div>
               </div>
             </div>
-
             <div class="pf-row">
               <div class="pf-group">
                 <label class="pf-label">Sector <span>*</span></label>
@@ -463,143 +191,326 @@
               </div>
               <div class="pf-group">
                 <label class="pf-label">Duration <span>*</span></label>
-                <input type="text" class="pf-input" id="pf-duration"
-                  placeholder="e.g. Full-time, 3 months" />
+                <input type="text" class="pf-input" id="pf-duration" placeholder="e.g. Full-time, 3 months" />
                 <div class="pf-error" id="pf-err-duration">Please enter duration</div>
               </div>
             </div>
-
             <div class="pf-row single">
               <div class="pf-group">
                 <label class="pf-label">Description <span>*</span></label>
-                <textarea class="pf-textarea" id="pf-description"
-                  placeholder="Describe the opportunity in detail..."></textarea>
-                <div class="pf-error" id="pf-err-description">
-                  Please add a description
-                </div>
+                <textarea class="pf-textarea" id="pf-description" placeholder="Describe the opportunity..."></textarea>
+                <div class="pf-error" id="pf-err-description">Please add a description</div>
               </div>
             </div>
-
             <div class="pf-row">
               <div class="pf-group">
                 <label class="pf-label">Region <span>*</span></label>
                 <select class="pf-select" id="pf-region">
                   <option value="">Select...</option>
-                  <option>Centre</option>
-                  <option>Littoral</option>
-                  <option>West</option>
-                  <option>North West</option>
-                  <option>South West</option>
-                  <option>Adamaoua</option>
-                  <option>North</option>
-                  <option>Far North</option>
-                  <option>South</option>
-                  <option>East</option>
-                  <option>National</option>
+                  <option>Centre</option><option>Littoral</option><option>West</option>
+                  <option>North West</option><option>South West</option><option>Adamaoua</option>
+                  <option>North</option><option>Far North</option><option>South</option>
+                  <option>East</option><option>National</option>
                 </select>
                 <div class="pf-error" id="pf-err-region">Please select region</div>
               </div>
               <div class="pf-group">
                 <label class="pf-label">City <span>*</span></label>
-                <input type="text" class="pf-input" id="pf-city"
-                  placeholder="e.g. Yaoundé" />
+                <input type="text" class="pf-input" id="pf-city" placeholder="e.g. Yaoundé" />
                 <div class="pf-error" id="pf-err-city">Please enter city</div>
               </div>
             </div>
-
             <div class="pf-row">
               <div class="pf-group">
                 <label class="pf-label">Salary / Compensation</label>
-                <input type="text" class="pf-input" id="pf-salary"
-                  placeholder="e.g. 150,000 XAF/mo or Free" />
+                <input type="text" class="pf-input" id="pf-salary" placeholder="e.g. 150,000 XAF/mo or Free" />
               </div>
               <div class="pf-group">
                 <label class="pf-label">Deadline <span>*</span></label>
                 <input type="date" class="pf-input" id="pf-deadline" />
-                <div class="pf-error" id="pf-err-deadline">
-                  Please set a deadline
-                </div>
+                <div class="pf-error" id="pf-err-deadline">Please set a deadline</div>
               </div>
             </div>
-
-            <!-- Requirements -->
             <div style="margin-bottom:20px;">
               <div class="pf-label" style="margin-bottom:8px;">Requirements</div>
               <div class="req-list" id="pf-req-list"></div>
               <div class="req-add-row">
-                <input type="text" class="req-add-input" id="pf-req-input"
-                  placeholder="Add a requirement..." />
+                <input type="text" class="req-add-input" id="pf-req-input" placeholder="Add a requirement..." />
                 <button class="req-add-btn" onclick="addPFReq()">+ Add</button>
               </div>
             </div>
-
-            <button class="post-submit" onclick="submitListing()">
+            <button class="post-submit" id="post-submit-btn" onclick="submitListing()">
               🚀 Publish Listing
             </button>
-
           </div>
         </div>
       </div>
 
-      <!-- Company profile panel -->
+      <!-- Company Profile -->
       <div class="dash-panel" id="panel-company-profile">
         <div class="dash-section-header">
           <div class="dash-section-title">Company Profile</div>
         </div>
-        <div style="background:var(--white);border:1px solid var(--gray-200);
-                    border-radius:var(--radius-xl);padding:32px;">
-          <div class="profile-avatar-row">
-            <div class="profile-avatar-big" id="profile-avatar-big">C</div>
+        <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-xl);padding:32px;">
+          <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;">
+            <div style="width:80px;height:80px;border-radius:var(--radius-md);background:var(--green-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--white);" id="profile-avatar-big">C</div>
             <div>
-              <div style="font-family:var(--font-display);font-size:20px;
-                          font-weight:700;color:var(--dark-900);" id="profile-name-big">
-              </div>
+              <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--dark-900);" id="profile-name-big"></div>
               <div style="font-size:13px;color:#888;" id="profile-type-big"></div>
             </div>
           </div>
-
           <div class="pf-row single" style="margin-bottom:16px;">
-            <div class="pf-group">
-              <label class="pf-label">Company Name</label>
-              <input type="text" class="pf-input" id="cp-name" />
-            </div>
+            <div class="pf-group"><label class="pf-label">Company Name</label><input type="text" class="pf-input" id="cp-name" /></div>
           </div>
           <div class="pf-row single" style="margin-bottom:16px;">
-            <div class="pf-group">
-              <label class="pf-label">Description</label>
-              <textarea class="pf-textarea" id="cp-desc"></textarea>
-            </div>
+            <div class="pf-group"><label class="pf-label">Description</label><textarea class="pf-textarea" id="cp-desc"></textarea></div>
           </div>
           <div class="pf-row" style="margin-bottom:16px;">
-            <div class="pf-group">
-              <label class="pf-label">Website</label>
-              <input type="text" class="pf-input" id="cp-website" />
-            </div>
-            <div class="pf-group">
-              <label class="pf-label">Region</label>
-              <input type="text" class="pf-input" id="cp-region" readonly />
-            </div>
+            <div class="pf-group"><label class="pf-label">Website</label><input type="text" class="pf-input" id="cp-website" /></div>
+            <div class="pf-group"><label class="pf-label">Region</label><input type="text" class="pf-input" id="cp-region" readonly style="background:var(--gray-100);color:#888;" /></div>
           </div>
-
-          <div id="cp-alert" style="display:none;padding:10px 14px;
-               border-radius:8px;font-size:13px;margin-bottom:14px;
-               background:var(--green-50);color:var(--green-800);
-               border:1px solid var(--green-200);">
-            Profile updated successfully!
-          </div>
-
-          <button class="post-submit" onclick="saveCompanyProfile()">
-            Save Changes
-          </button>
+          <div id="cp-alert" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;background:var(--green-50);color:var(--green-800);border:1px solid var(--green-200);">Profile updated!</div>
+          <button class="post-submit" onclick="saveCompanyProfile()">Save Changes</button>
         </div>
       </div>
 
     </main>
   </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/dashboard.js"></script>
+  <script type="module">
+    import { FirebaseAuth, updateNavbar } from './js/firebase.js';
 
+    var currentUser = null;
+    var pfType      = '';
+    var pfReqs      = [];
+
+    window.doLogout = function() { FirebaseAuth.logout(); };
+
+    window.addEventListener('load', async function() {
+      currentUser = FirebaseAuth.requireCompany();
+      if (!currentUser) return;
+      updateNavbar();
+      loadCompanyInfo();
+      await loadListings();
+      loadCompanyProfileForm();
+    });
+
+    function loadCompanyInfo() {
+      var initial = currentUser.name.charAt(0).toUpperCase();
+      document.getElementById('company-avatar').textContent = initial;
+      document.getElementById('company-name').textContent   = currentUser.name;
+      document.getElementById('company-type').textContent   = currentUser.companyType || 'Organization';
+      document.getElementById('welcome-title').textContent  = 'Welcome, ' + currentUser.name;
+      document.getElementById('stat-region').textContent    = currentUser.companyRegion || '—';
+    }
+
+    async function loadListings() {
+      var listings = await FirebaseAuth.getCompanyListings(currentUser.id);
+      document.getElementById('stat-listings').textContent = listings.length;
+      renderOverviewListings(listings);
+      renderAllListings(listings);
+    }
+
+    function getTagBg(type) {
+      var m = { job:'#E1F5EE', training:'#EBF2FF', internship:'#FFF3E0', grant:'#FEF0F0' };
+      return m[type] || '#E1F5EE';
+    }
+    function getTagColor(type) {
+      var m = { job:'#085041', training:'#1a4a8a', internship:'#7a4100', grant:'#8a1a1a' };
+      return m[type] || '#085041';
+    }
+    function capitalise(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+
+    function renderListingCard(listing, showDelete) {
+      return (
+        '<div class="listing-card">' +
+          '<div>' +
+            '<div class="listing-card-title">' + listing.title + '</div>' +
+            '<div style="margin-top:6px;">' +
+              '<span style="font-size:11px;padding:3px 10px;border-radius:20px;' +
+                'background:' + getTagBg(listing.type) + ';color:' + getTagColor(listing.type) + ';font-weight:500;">' +
+                capitalise(listing.type) + '</span>' +
+            '</div>' +
+            '<div class="listing-card-meta">' +
+              '<span>📍 ' + (listing.city || listing.region) + '</span>' +
+              '<span>⏱ ' + listing.duration + '</span>' +
+              '<span>💰 ' + (listing.salary || 'Not specified') + '</span>' +
+              '<span>⏰ ' + (listing.deadline || '') + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="listing-card-actions">' +
+            '<button class="btn-view" onclick="window.location.href=\'opportunities.html\'">View</button>' +
+            (showDelete
+              ? '<button class="btn-delete" onclick="doDeleteListing(\'' + listing.id + '\')">Delete</button>'
+              : '') +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    function renderOverviewListings(listings) {
+      var container = document.getElementById('overview-listings');
+      if (listings.length === 0) {
+        container.innerHTML = '<div class="empty-listings"><div class="empty-listings-icon">📋</div><h3>No listings yet</h3><p>Click "Post New Listing" to add your first opportunity</p></div>';
+        return;
+      }
+      container.innerHTML = listings.slice(0, 3).map(function(l) { return renderListingCard(l, false); }).join('');
+    }
+
+    function renderAllListings(listings) {
+      var container = document.getElementById('all-listings');
+      if (listings.length === 0) {
+        container.innerHTML = '<div class="empty-listings"><div class="empty-listings-icon">📋</div><h3>No listings yet</h3><p>Post your first opportunity to see it here</p></div>';
+        return;
+      }
+      container.innerHTML = listings.map(function(l) { return renderListingCard(l, true); }).join('');
+    }
+
+    window.doDeleteListing = async function(id) {
+      if (!confirm('Delete this listing?')) return;
+      await FirebaseAuth.deleteListing(id);
+      await loadListings();
+    };
+
+    window.showPanel = function(name) {
+      document.querySelectorAll('.dash-panel').forEach(function(p) { p.classList.remove('active'); });
+      document.querySelectorAll('.dash-nav-item').forEach(function(n) { n.classList.remove('active'); });
+      document.getElementById('panel-' + name).classList.add('active');
+      var navMap = { 'overview':0, 'listings':1, 'post':2, 'company-profile':3 };
+      var items  = document.querySelectorAll('.dash-nav-item');
+      if (items[navMap[name]]) items[navMap[name]].classList.add('active');
+    };
+
+    window.selectPFType = function(type, el) {
+      pfType = type;
+      document.querySelectorAll('.pf-type-opt').forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected');
+      document.getElementById('pf-err-type').classList.remove('visible');
+    };
+
+    window.addPFReq = function() {
+      var input = document.getElementById('pf-req-input');
+      var val   = input.value.trim();
+      if (!val) return;
+      pfReqs.push(val);
+      input.value = '';
+      renderPFReqs();
+    };
+
+    document.getElementById('pf-req-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); window.addPFReq(); }
+    });
+
+    function renderPFReqs() {
+      var list = document.getElementById('pf-req-list');
+      list.innerHTML = pfReqs.map(function(r, i) {
+        return '<div class="req-item"><div class="req-dot"></div><span class="req-text">' + r + '</span>' +
+          '<button class="req-rm" onclick="removePFReq(' + i + ')">×</button></div>';
+      }).join('');
+    }
+
+    window.removePFReq = function(i) { pfReqs.splice(i, 1); renderPFReqs(); };
+
+    function validatePostForm() {
+      var valid = true;
+      function check(id, errId, condition) {
+        var el = document.getElementById(id); var err = document.getElementById(errId);
+        if (!condition) { if (el) el.classList.add('error'); if (err) err.classList.add('visible'); valid = false; }
+        else { if (el) el.classList.remove('error'); if (err) err.classList.remove('visible'); }
+      }
+      if (!pfType) { document.getElementById('pf-err-type').classList.add('visible'); valid = false; }
+      check('pf-title',       'pf-err-title',       document.getElementById('pf-title').value.trim() !== '');
+      check('pf-sector',      'pf-err-sector',       document.getElementById('pf-sector').value !== '');
+      check('pf-duration',    'pf-err-duration',     document.getElementById('pf-duration').value.trim() !== '');
+      check('pf-description', 'pf-err-description',  document.getElementById('pf-description').value.trim().length > 10);
+      check('pf-region',      'pf-err-region',       document.getElementById('pf-region').value !== '');
+      check('pf-city',        'pf-err-city',         document.getElementById('pf-city').value.trim() !== '');
+      check('pf-deadline',    'pf-err-deadline',      document.getElementById('pf-deadline').value !== '');
+      return valid;
+    }
+
+    window.submitListing = async function() {
+      var alertEl = document.getElementById('post-alert');
+      var btn     = document.getElementById('post-submit-btn');
+      alertEl.className = 'post-alert';
+      if (!validatePostForm()) return;
+
+      btn.textContent = 'Publishing...';
+      btn.disabled    = true;
+
+      var deadline = document.getElementById('pf-deadline').value;
+      var dateStr  = new Date(deadline).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+
+      var listing = {
+        title:        document.getElementById('pf-title').value.trim(),
+        type:         pfType,
+        sector:       document.getElementById('pf-sector').value,
+        duration:     document.getElementById('pf-duration').value.trim(),
+        description:  document.getElementById('pf-description').value.trim(),
+        region:       document.getElementById('pf-region').value,
+        city:         document.getElementById('pf-city').value.trim(),
+        salary:       document.getElementById('pf-salary').value.trim() || 'Not specified',
+        deadline:     dateStr,
+        requirements: pfReqs.slice(),
+        organization: currentUser.name,
+        orgShort:     currentUser.name.substring(0, 2).toUpperCase(),
+        contact:      currentUser.email,
+        posted:       new Date().toLocaleDateString('en-GB'),
+        postedBy:     currentUser.id
+      };
+
+      await FirebaseAuth.saveListing(listing);
+
+      alertEl.textContent = '✅ Listing published! It is now live on the platform.';
+      alertEl.className   = 'post-alert success';
+
+      // Reset form
+      document.getElementById('pf-title').value       = '';
+      document.getElementById('pf-sector').value      = '';
+      document.getElementById('pf-duration').value    = '';
+      document.getElementById('pf-description').value = '';
+      document.getElementById('pf-region').value      = '';
+      document.getElementById('pf-city').value        = '';
+      document.getElementById('pf-salary').value      = '';
+      document.getElementById('pf-deadline').value    = '';
+      pfType = ''; pfReqs = [];
+      renderPFReqs();
+      document.querySelectorAll('.pf-type-opt').forEach(function(o) { o.classList.remove('selected'); });
+
+      btn.textContent = '🚀 Publish Listing';
+      btn.disabled    = false;
+
+      await loadListings();
+      setTimeout(function() { window.showPanel('listings'); }, 1200);
+    };
+
+    function loadCompanyProfileForm() {
+      var initial = currentUser.name.charAt(0).toUpperCase();
+      document.getElementById('profile-avatar-big').textContent = initial;
+      document.getElementById('profile-name-big').textContent   = currentUser.name;
+      document.getElementById('profile-type-big').textContent   = currentUser.companyType || 'Organization';
+      document.getElementById('cp-name').value    = currentUser.name || '';
+      document.getElementById('cp-desc').value    = currentUser.companyDescription || '';
+      document.getElementById('cp-website').value = currentUser.companyWebsite || '';
+      document.getElementById('cp-region').value  = currentUser.companyRegion || '';
+    }
+
+    window.saveCompanyProfile = async function() {
+      var updated = {
+        name:               document.getElementById('cp-name').value.trim(),
+        companyDescription: document.getElementById('cp-desc').value.trim(),
+        companyWebsite:     document.getElementById('cp-website').value.trim()
+      };
+      var result = await FirebaseAuth.updateUser(updated);
+      if (result.success) {
+        currentUser = result.user;
+        loadCompanyInfo();
+        loadCompanyProfileForm();
+        var cpAlert = document.getElementById('cp-alert');
+        cpAlert.style.display = 'block';
+        setTimeout(function() { cpAlert.style.display = 'none'; }, 2500);
+      }
+    };
+  </script>
 </body>
 </html>
