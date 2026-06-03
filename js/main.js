@@ -1,26 +1,8 @@
 // ═══════════════════════════════════════
 // OpportuNet Cameroon — Homepage
-// Loads static + Firebase listings
+// Uses central store for fluid connection
 // ═══════════════════════════════════════
 
-// Combined listings array
-var homeListings = [];
-
-// ── Load all listings for homepage ────────
-async function loadHomeListings() {
-  homeListings = OPPORTUNITIES.slice();
-  try {
-    const { firebaseGetAllListings } = await import('./firebase.js');
-    homeListings = await firebaseGetAllListings();
-  } catch(e) {
-    homeListings = OPPORTUNITIES.slice();
-  }
-  renderCards('all');
-  renderRegions();
-  renderCategories();
-}
-
-// ── Tag helpers ───────────────────────────
 function getTagBg(type) {
   var m = { job:'#E1F5EE', training:'#EBF2FF', internship:'#FFF3E0', grant:'#FEF0F0' };
   return m[type] || '#E1F5EE';
@@ -35,17 +17,16 @@ function capitalise(str) {
 }
 
 // ── Render opportunity cards ──────────────
-// filter = 'all' | 'job' | 'internship' | 'training' | 'grant'
 function renderCards(filter) {
   var grid = document.getElementById('cards-grid');
   if (!grid) return;
 
-  // Filter listings by type
-  var filtered = filter === 'all'
-    ? homeListings
-    : homeListings.filter(function(o) { return o.type === filter; });
+  var listings = OpportuNet.listings || OPPORTUNITIES;
 
-  // Show max 4 cards on homepage
+  var filtered = filter === 'all'
+    ? listings
+    : listings.filter(function(o) { return o.type === filter; });
+
   var display = filtered.slice(0, 4);
 
   if (display.length === 0) {
@@ -90,7 +71,7 @@ function renderCards(filter) {
   }).join('');
 }
 
-// ── Filter tab switching ──────────────────
+// ── Filter tabs ───────────────────────────
 function initFilterTabs() {
   var tabs = document.querySelectorAll('.filter-tab');
   tabs.forEach(function(tab) {
@@ -102,13 +83,15 @@ function initFilterTabs() {
   });
 }
 
-// ── Render region list ────────────────────
+// ── Region list ───────────────────────────
 function renderRegions() {
   var list = document.getElementById('region-list');
   if (!list) return;
 
+  var listings = OpportuNet.listings || OPPORTUNITIES;
+
   list.innerHTML = REGIONS.slice(0, 6).map(function(region) {
-    var count = homeListings.filter(function(o) {
+    var count = listings.filter(function(o) {
       return o.region === region.name || o.region === 'National';
     }).length;
     return (
@@ -121,13 +104,15 @@ function renderRegions() {
   }).join('');
 }
 
-// ── Render sector categories ──────────────
+// ── Sector categories ─────────────────────
 function renderCategories() {
   var grid = document.getElementById('categories-grid');
   if (!grid) return;
 
+  var listings = OpportuNet.listings || OPPORTUNITIES;
+
   grid.innerHTML = SECTORS.map(function(sector) {
-    var count = homeListings.filter(function(o) {
+    var count = listings.filter(function(o) {
       return o.sector && o.sector.toLowerCase() === sector.name.toLowerCase();
     }).length;
     return (
@@ -173,7 +158,6 @@ function initSearch() {
     window.location.href = 'opportunities.html?' + params.toString();
   });
 
-  // Search on Enter key
   var input = document.getElementById('search-input');
   if (input) {
     input.addEventListener('keydown', function(e) {
@@ -183,9 +167,22 @@ function initSearch() {
 }
 
 // ── Init ──────────────────────────────────
-window.addEventListener('load', function() {
+window.addEventListener('load', async function() {
+  // Start animations and UI immediately
   initFilterTabs();
   initSearch();
   setTimeout(animateCounters, 300);
-  loadHomeListings();
+
+  // Show static cards immediately while Firebase loads
+  renderCards('all');
+  renderRegions();
+  renderCategories();
+
+  // Load from central store (static + Firebase)
+  await OpportuNet.load();
+
+  // Re-render with full data
+  renderCards('all');
+  renderRegions();
+  renderCategories();
 });
