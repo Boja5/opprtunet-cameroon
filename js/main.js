@@ -1,163 +1,191 @@
 // ═══════════════════════════════════════
-// OpportuNet Cameroon — Homepage Logic
+// OpportuNet Cameroon — Homepage
+// Loads static + Firebase listings
 // ═══════════════════════════════════════
 
-document.addEventListener('DOMContentLoaded', () => {
+// Combined listings array
+var homeListings = [];
 
-  // ─── Render opportunity cards ───────────
-  function renderCards(filter) {
-    const grid = document.getElementById('cards-grid');
-    if (!grid) return;
-
-    const filtered = filter === 'all'
-      ? OPPORTUNITIES
-      : OPPORTUNITIES.filter(o => o.type === filter);
-
-    const display = filtered.slice(0, 4);
-
-    grid.innerHTML = display.map(opp => `
-      <div class="opp-card animate-in" onclick="window.location.href='detail.html?id=${opp.id}'">
-        <div class="card-header">
-          <div class="card-org-logo">${opp.orgShort}</div>
-          <button class="card-bookmark" onclick="event.stopPropagation(); toggleBookmark(this)" aria-label="Bookmark">
-            ♡
-          </button>
-        </div>
-        <div class="card-org-name">${opp.organization}</div>
-        <div class="card-title">${opp.title}</div>
-        <div class="card-pills">
-          <span class="tag ${getTagClass(opp.type)}">${capitalise(opp.type)}</span>
-          <span class="card-pill">📍 ${opp.city}</span>
-          <span class="card-pill">⏱ ${opp.duration}</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-deadline">⏰ ${opp.deadline}</span>
-          <span class="card-salary">${opp.salary}</span>
-        </div>
-      </div>
-    `).join('');
+// ── Load all listings for homepage ────────
+async function loadHomeListings() {
+  homeListings = OPPORTUNITIES.slice();
+  try {
+    const { firebaseGetAllListings } = await import('./firebase.js');
+    homeListings = await firebaseGetAllListings();
+  } catch(e) {
+    homeListings = OPPORTUNITIES.slice();
   }
-
-  function getTagClass(type) {
-    const map = {
-      job: 'tag-job',
-      training: 'tag-training',
-      internship: 'tag-internship',
-      grant: 'tag-grant'
-    };
-    return map[type] || 'tag-job';
-  }
-
-  function capitalise(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
-  // ─── Filter tabs ────────────────────────
-  const tabs = document.querySelectorAll('.filter-tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      renderCards(tab.dataset.filter);
-    });
-  });
-
-  // ─── Render categories ──────────────────
-  function renderCategories() {
-    const grid = document.getElementById('categories-grid');
-    if (!grid) return;
-    grid.innerHTML = SECTORS.map(s => `
-      <div class="cat-card" onclick="window.location.href='opportunities.html?sector=${s.name.toLowerCase()}'">
-        <div class="cat-icon-wrap" style="background: ${s.color}">
-          <span style="font-size: 24px">${s.icon}</span>
-        </div>
-        <div class="cat-name">${s.name}</div>
-        <div class="cat-count">${s.count} listings</div>
-      </div>
-    `).join('');
-  }
-
-  // ─── Render region list ─────────────────
-  function renderRegions() {
-    const list = document.getElementById('region-list');
-    if (!list) return;
-    list.innerHTML = REGIONS.slice(0, 6).map((r, i) => `
-      <div class="region-item ${i === 0 ? 'active' : ''}"
-           onclick="highlightRegion(this)">
-        <span class="region-name">📍 ${r.name}</span>
-        <span class="region-count">${r.count}</span>
-      </div>
-    `).join('');
-  }
-
-  // ─── Search bar ─────────────────────────
-  const searchBtn = document.getElementById('search-btn');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      const query  = document.getElementById('search-input').value.trim();
-      const region = document.getElementById('search-region').value;
-      const type   = document.getElementById('search-type').value;
-      const params = new URLSearchParams();
-      if (query)  params.set('q', query);
-      if (region) params.set('region', region);
-      if (type)   params.set('type', type);
-      window.location.href = `opportunities.html?${params.toString()}`;
-    });
-  }
-
-  // Enter key triggers search
-  const searchInput = document.getElementById('search-input');
-  if (searchInput) {
-    searchInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('search-btn').click();
-    });
-  }
-
-  // ─── Bookmark toggle ────────────────────
-  window.toggleBookmark = function(btn) {
-    const saved = btn.dataset.saved === 'true';
-    btn.dataset.saved = !saved;
-    btn.textContent   = saved ? '♡' : '♥';
-    btn.style.color   = saved ? '' : '#0F6E56';
-  };
-
-  // ─── Region highlight ───────────────────
-  window.highlightRegion = function(el) {
-    document.querySelectorAll('.region-item').forEach(r => r.classList.remove('active'));
-    el.classList.add('active');
-  };
-
-  // ─── Navbar scroll effect ───────────────
-  window.addEventListener('scroll', () => {
-    const nav = document.querySelector('.navbar');
-    if (nav) {
-      nav.style.borderBottomColor = window.scrollY > 20
-        ? 'rgba(255,255,255,0.1)'
-        : 'transparent';
-    }
-  });
-
-  // ─── Counter animation ──────────────────
-  function animateCounters() {
-    const counters = document.querySelectorAll('.hero-stat-num');
-    counters.forEach(counter => {
-      const target = parseInt(counter.dataset.target);
-      if (!target) return;
-      const suffix = counter.dataset.suffix || '';
-      let current  = 0;
-      const step   = Math.ceil(target / 60);
-      const timer  = setInterval(() => {
-        current = Math.min(current + step, target);
-        counter.textContent = current.toLocaleString() + suffix;
-        if (current >= target) clearInterval(timer);
-      }, 20);
-    });
-  }
-
-  // ─── Init ───────────────────────────────
   renderCards('all');
-  renderCategories();
   renderRegions();
-  setTimeout(animateCounters, 300);
+  renderCategories();
+}
 
+// ── Tag helpers ───────────────────────────
+function getTagBg(type) {
+  var m = { job:'#E1F5EE', training:'#EBF2FF', internship:'#FFF3E0', grant:'#FEF0F0' };
+  return m[type] || '#E1F5EE';
+}
+function getTagColor(type) {
+  var m = { job:'#085041', training:'#1a4a8a', internship:'#7a4100', grant:'#8a1a1a' };
+  return m[type] || '#085041';
+}
+function capitalise(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// ── Render opportunity cards ──────────────
+// filter = 'all' | 'job' | 'internship' | 'training' | 'grant'
+function renderCards(filter) {
+  var grid = document.getElementById('cards-grid');
+  if (!grid) return;
+
+  // Filter listings by type
+  var filtered = filter === 'all'
+    ? homeListings
+    : homeListings.filter(function(o) { return o.type === filter; });
+
+  // Show max 4 cards on homepage
+  var display = filtered.slice(0, 4);
+
+  if (display.length === 0) {
+    grid.innerHTML =
+      '<div style="text-align:center;padding:40px;color:#888;grid-column:1/-1;">' +
+        '<p>No listings found for this category yet.</p>' +
+      '</div>';
+    return;
+  }
+
+  grid.innerHTML = display.map(function(opp) {
+    var tagBg    = getTagBg(opp.type);
+    var tagColor = getTagColor(opp.type);
+    var orgShort = opp.orgShort ||
+      (opp.organization ? opp.organization.substring(0, 2).toUpperCase() : 'OP');
+
+    return (
+      '<div class="opp-card" onclick="window.location.href=\'detail.html?id=' + opp.id + '\'">' +
+        '<div class="opp-card-inner">' +
+          '<div class="opp-card-top">' +
+            '<div class="opp-org-logo">' + orgShort + '</div>' +
+            '<div class="opp-card-meta">' +
+              '<div class="opp-org-name">' + (opp.organization || 'Organization') + '</div>' +
+              '<div class="opp-location">📍 ' + (opp.city || opp.region || '') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="opp-title">' + opp.title + '</div>' +
+          '<div class="opp-tags">' +
+            '<span class="opp-tag" style="background:' + tagBg + ';color:' + tagColor + '">' +
+              capitalise(opp.type) +
+            '</span>' +
+            (opp.sector ? '<span class="opp-tag">' + capitalise(opp.sector) + '</span>' : '') +
+            (opp.duration ? '<span class="opp-tag">⏱ ' + opp.duration + '</span>' : '') +
+          '</div>' +
+          '<div class="opp-card-footer">' +
+            '<span class="opp-salary">' + (opp.salary || 'See details') + '</span>' +
+            '<span class="opp-deadline">⏰ ' + (opp.deadline || '') + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+// ── Filter tab switching ──────────────────
+function initFilterTabs() {
+  var tabs = document.querySelectorAll('.filter-tab');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      renderCards(tab.dataset.filter || 'all');
+    });
+  });
+}
+
+// ── Render region list ────────────────────
+function renderRegions() {
+  var list = document.getElementById('region-list');
+  if (!list) return;
+
+  list.innerHTML = REGIONS.slice(0, 6).map(function(region) {
+    var count = homeListings.filter(function(o) {
+      return o.region === region.name || o.region === 'National';
+    }).length;
+    return (
+      '<a href="opportunities.html?region=' + encodeURIComponent(region.name) + '" ' +
+        'class="region-item">' +
+        '<span class="region-name">📍 ' + region.name + '</span>' +
+        '<span class="region-count">' + (count || region.count) + '</span>' +
+      '</a>'
+    );
+  }).join('');
+}
+
+// ── Render sector categories ──────────────
+function renderCategories() {
+  var grid = document.getElementById('categories-grid');
+  if (!grid) return;
+
+  grid.innerHTML = SECTORS.map(function(sector) {
+    var count = homeListings.filter(function(o) {
+      return o.sector && o.sector.toLowerCase() === sector.name.toLowerCase();
+    }).length;
+    return (
+      '<a href="opportunities.html?sector=' + encodeURIComponent(sector.name.toLowerCase()) + '" ' +
+        'class="category-card">' +
+        '<div class="category-icon" style="background:' + sector.color + '">' + sector.icon + '</div>' +
+        '<div class="category-name">' + sector.name + '</div>' +
+        '<div class="category-count">' + (count || sector.count) + ' listings</div>' +
+      '</a>'
+    );
+  }).join('');
+}
+
+// ── Hero counter animation ────────────────
+function animateCounters() {
+  var counters = document.querySelectorAll('.hero-stat-num');
+  counters.forEach(function(counter) {
+    var target = parseInt(counter.dataset.target);
+    if (!target) return;
+    var suffix  = counter.dataset.suffix || '';
+    var current = 0;
+    var step    = Math.ceil(target / 60);
+    var timer   = setInterval(function() {
+      current = Math.min(current + step, target);
+      counter.textContent = current.toLocaleString() + suffix;
+      if (current >= target) clearInterval(timer);
+    }, 20);
+  });
+}
+
+// ── Search bar ────────────────────────────
+function initSearch() {
+  var btn = document.getElementById('search-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var q      = document.getElementById('search-input').value.trim();
+    var region = document.getElementById('search-region').value;
+    var type   = document.getElementById('search-type').value;
+    var params = new URLSearchParams();
+    if (q)      params.set('q',      q);
+    if (region) params.set('region', region);
+    if (type)   params.set('type',   type);
+    window.location.href = 'opportunities.html?' + params.toString();
+  });
+
+  // Search on Enter key
+  var input = document.getElementById('search-input');
+  if (input) {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') btn.click();
+    });
+  }
+}
+
+// ── Init ──────────────────────────────────
+window.addEventListener('load', function() {
+  initFilterTabs();
+  initSearch();
+  setTimeout(animateCounters, 300);
+  loadHomeListings();
 });
