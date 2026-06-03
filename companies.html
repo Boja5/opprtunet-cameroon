@@ -31,7 +31,7 @@
     .company-desc { font-size:13px; color:#555; line-height:1.7; font-weight:300; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
     .company-meta { display:flex; gap:10px; flex-wrap:wrap; padding-top:14px; border-top:1px solid var(--gray-200); }
     .company-meta-item { font-size:11px; color:#888; }
-    .company-listings-count { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; color:var(--green-700); background:var(--green-50); border:1px solid var(--green-200); padding:3px 10px; border-radius:20px; margin-top:10px; }
+    .company-listings-count { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; color:var(--green-700); background:var(--green-50); border:1px solid var(--green-200); padding:3px 10px; border-radius:20px; margin-top:10px; cursor:pointer; }
     .firebase-badge { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:500; color:#1a4a8a; background:#EBF2FF; border:1px solid #c3d9ff; padding:2px 8px; border-radius:20px; margin-left:6px; }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.visible { display:flex; }
@@ -57,9 +57,7 @@
     .btn-visit:hover { background:var(--green-600); }
     .results-info { font-size:14px; color:#888; margin-bottom:20px; }
     .results-info strong { color:var(--dark-900); }
-    .loading-state { text-align:center; padding:60px 20px; color:#888; }
-    .loading-state-icon { font-size:40px; margin-bottom:12px; animation:spin 1s linear infinite; }
-    @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+    .loading-state { text-align:center; padding:60px 20px; color:#888; grid-column:1/-1; }
     @media (max-width:600px) { .companies-grid { grid-template-columns:1fr; } .modal-info-grid { grid-template-columns:1fr; } }
   </style>
 </head>
@@ -105,6 +103,7 @@
         <option value="Media">Media</option>
         <option value="Government">Government</option>
         <option value="Telecommunications">Telecommunications</option>
+        <option value="Various">Various</option>
       </select>
       <select id="company-type">
         <option value="">All Types</option>
@@ -119,7 +118,7 @@
     <div class="results-info" id="results-info">Loading companies...</div>
     <div class="companies-grid" id="companies-grid">
       <div class="loading-state">
-        <div class="loading-state-icon">⚙️</div>
+        <div style="font-size:40px;margin-bottom:12px;">⚙️</div>
         <p>Loading companies...</p>
       </div>
     </div>
@@ -130,42 +129,15 @@
   </div>
 
   <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
   <script type="module">
-    import { FirebaseAuth, updateNavbar, firebaseGetCompanies } from './js/firebase.js';
-
+    import { updateNavbar } from './js/firebase.js';
     updateNavbar();
 
-    var allCompanies = [];
-
-    async function loadCompanies() {
-      // Start with static companies from data.js
-      allCompanies = COMPANIES.slice();
-
-      // Load real Firebase company accounts
-      try {
-        var firebaseCompanies = await firebaseGetCompanies();
-        firebaseCompanies.forEach(function(fc) {
-          allCompanies.push({
-            id:          fc.id,
-            name:        fc.name,
-            short:       fc.name ? fc.name.substring(0, 2).toUpperCase() : 'CO',
-            type:        fc.companyType        || 'Company',
-            region:      fc.companyRegion      || 'Cameroon',
-            city:        fc.companyRegion      || 'Cameroon',
-            sector:      'Various',
-            description: fc.companyDescription || 'No description provided yet.',
-            website:     fc.companyWebsite     || '',
-            email:       fc.email              || '',
-            founded:     new Date(fc.createdAt).getFullYear().toString(),
-            employees:   'N/A',
-            listings:    [],
-            isFirebase:  true
-          });
-        });
-      } catch(e) {
-        console.log('Firebase companies load error:', e);
-      }
-
+    // ── Load and render ───────────────────
+    async function init() {
+      // Load everything from the central store
+      await OpportuNet.load();
       render();
     }
 
@@ -174,10 +146,10 @@
       var sector = document.getElementById('company-sector').value;
       var type   = document.getElementById('company-type').value;
 
-      var filtered = allCompanies.filter(function(c) {
+      var filtered = OpportuNet.companies.filter(function(c) {
         var matchQ = !query ||
           c.name.toLowerCase().includes(query) ||
-          c.description.toLowerCase().includes(query) ||
+          (c.description && c.description.toLowerCase().includes(query)) ||
           (c.city && c.city.toLowerCase().includes(query));
         var matchS = !sector || c.sector === sector;
         var matchT = !type   || c.type === type;
@@ -200,7 +172,18 @@
       }
 
       grid.innerHTML = filtered.map(function(c) {
-        var listingCount = c.listings ? c.listings.length : 0;
+        // Count listings for this company from the combined store
+        var listingCount = 0;
+        if (c.isFirebase) {
+          // For Firebase companies count by postedBy
+          listingCount = OpportuNet.listings.filter(function(l) {
+            return l.postedBy === c.firebaseId || l.postedBy === c.id;
+          }).length;
+        } else {
+          // For static companies use the listings array
+          listingCount = c.listings ? c.listings.length : 0;
+        }
+
         return (
           '<div class="company-card" onclick="openModal(\'' + c.id + '\')">' +
             '<div class="company-card-top">' +
@@ -214,13 +197,13 @@
                 '<div class="company-type">' + c.type + '</div>' +
               '</div>' +
             '</div>' +
-            '<div class="company-desc">' + c.description + '</div>' +
+            '<div class="company-desc">' + (c.description || 'No description provided.') + '</div>' +
             '<div class="company-meta">' +
-              '<span class="company-meta-item">📍 ' + c.city + '</span>' +
+              '<span class="company-meta-item">📍 ' + (c.city || c.region || 'Cameroon') + '</span>' +
               '<span class="company-meta-item">🏢 ' + c.sector + '</span>' +
             '</div>' +
             '<div class="company-listings-count">' +
-              '📋 ' + listingCount + ' listing' + (listingCount === 1 ? '' : 's') +
+              '📋 ' + listingCount + ' active listing' + (listingCount === 1 ? '' : 's') +
             '</div>' +
           '</div>'
         );
@@ -228,12 +211,22 @@
     }
 
     window.openModal = function(id) {
-      var c = allCompanies.find(function(x) { return x.id === id; });
+      var c = OpportuNet.companies.find(function(x) {
+        return String(x.id) === String(id);
+      });
       if (!c) return;
 
-      var listings = OPPORTUNITIES.filter(function(o) {
-        return c.listings && c.listings.indexOf(o.id) !== -1;
-      });
+      // Get all listings for this company from the store
+      var listings = [];
+      if (c.isFirebase) {
+        listings = OpportuNet.listings.filter(function(l) {
+          return l.postedBy === c.firebaseId || l.postedBy === c.id;
+        });
+      } else {
+        listings = OpportuNet.listings.filter(function(l) {
+          return c.listings && c.listings.indexOf(l.id) !== -1;
+        });
+      }
 
       var listingsHTML = listings.length > 0
         ? listings.map(function(opp) {
@@ -242,13 +235,16 @@
                    'onclick="window.location.href=\'detail.html?id=' + opp.id + '\'">' +
                 '<div>' +
                   '<div class="modal-listing-title">' + opp.title + '</div>' +
-                  '<div class="modal-listing-meta">' + opp.type + ' · ' + opp.city + ' · ' + opp.salary + '</div>' +
+                  '<div class="modal-listing-meta">' +
+                    (opp.type || '') + ' · ' + (opp.city || opp.region || '') +
+                    ' · ' + (opp.salary || 'See details') +
+                  '</div>' +
                 '</div>' +
-                '<span style="color:var(--green-700);">→</span>' +
+                '<span style="color:var(--green-700);font-size:18px;">→</span>' +
               '</div>'
             );
           }).join('')
-        : '<p style="font-size:13px;color:#aaa;">No active listings</p>';
+        : '<p style="font-size:13px;color:#aaa;">No active listings yet.</p>';
 
       document.getElementById('modal').innerHTML =
         '<div class="modal-header">' +
@@ -260,12 +256,12 @@
         '<div class="modal-body">' +
           '<div class="modal-section">' +
             '<div class="modal-section-title">About</div>' +
-            '<div class="modal-desc">' + c.description + '</div>' +
+            '<div class="modal-desc">' + (c.description || 'No description provided.') + '</div>' +
           '</div>' +
           '<div class="modal-section">' +
             '<div class="modal-section-title">Details</div>' +
             '<div class="modal-info-grid">' +
-              '<div><div class="modal-info-label">Location</div><div class="modal-info-value">' + c.city + '</div></div>' +
+              '<div><div class="modal-info-label">Location</div><div class="modal-info-value">' + (c.city || c.region || 'Cameroon') + '</div></div>' +
               '<div><div class="modal-info-label">Sector</div><div class="modal-info-value">' + c.sector + '</div></div>' +
               '<div><div class="modal-info-label">Type</div><div class="modal-info-value">' + c.type + '</div></div>' +
               '<div><div class="modal-info-label">Email</div><div class="modal-info-value" style="word-break:break-all;">' + (c.email || 'N/A') + '</div></div>' +
@@ -273,7 +269,7 @@
             '</div>' +
           '</div>' +
           '<div class="modal-section">' +
-            '<div class="modal-section-title">Active Listings</div>' +
+            '<div class="modal-section-title">Active Listings (' + listings.length + ')</div>' +
             listingsHTML +
           '</div>' +
           '<button class="btn-visit" ' +
@@ -296,7 +292,7 @@
     document.getElementById('company-sector').addEventListener('change', render);
     document.getElementById('company-type').addEventListener('change', render);
 
-    loadCompanies();
+    init();
   </script>
 </body>
 </html>
